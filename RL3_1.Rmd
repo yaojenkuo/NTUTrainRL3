@@ -92,9 +92,27 @@ cor(mtcars[1:5])
 
 ## Binomial Tests
 
-
+```{r}
+binom.test(x=92, n=315, p=1/6)
+```
 
 ## T-tests
+
+* one sample t-test
+
+Whether 2 means are significantly different.
+
+```{r}
+
+```
+
+* two sample t-test
+
+Whether the means of 2 independent groups are different.
+
+```{r}
+
+```
 
 ## Chi-squared Test
 
