@@ -18,11 +18,74 @@ output: slidy_presentation
 
 ## Sampling
 
+* The `sample()` function
+
+```{r}
+data <- c(1:10)
+sample(data, 5, replace=FALSE)
+sample(data, 10, replace=TRUE)
+```
+
 ## Probability Distribution
+
+* The `dnorm()` function
+
+```{r}
+
+```
+
+* The `pnorm()` function
+
+```{r}
+
+```
+
+* The `qnorm()` function
+
+```{r}
+
+```
+
+* The `rnorm()` function
+
+```{r}
+
+```
 
 ## Descriptitve Statistics
 
+* Built-in Descriptive Statistics Functions
+
+```{r}
+data <- c(1:10)
+range(data)
+length(data)
+mean(data)
+median(data)
+quantile(data, 0.5)
+sd(data)
+var(data)
+max(data)
+min(data)
+summary(data)
+```
+
+* Customized `mode()` function
+
+```{r}
+mode <- function(x) {
+  temp <- table(x)
+  max(temp)
+}
+data <- c(1,2,2,3,3,3)
+mode(data)
+```
+
 ## Correlations
+
+```{r}
+
+```
 
 ## Binomial Tests
 
