@@ -83,11 +83,16 @@ mode(data)
 
 ## Correlations
 
-```{r}
+* The `cor()` function
 
+```{r}
+str(mtcars)
+cor(mtcars[1:5])
 ```
 
 ## Binomial Tests
+
+
 
 ## T-tests
 
