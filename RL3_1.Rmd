@@ -1,0 +1,33 @@
+---
+title: "Basic Statistics"
+author: "Yao-Jen Kuo"
+date: "February, 2016"
+output: slidy_presentation
+---
+
+## Agenda
+
+* Sampling
+* Probability Distribution
+* Descriptive Statistics
+* Correlations
+* Binomial Tests
+* T-tests
+* Chi-squared Test
+* ANOVA
+
+## Sampling
+
+## Probability Distribution
+
+## Descriptitve Statistics
+
+## Correlations
+
+## Binomial Tests
+
+## T-tests
+
+## Chi-squared Test
+
+## ANOVA
