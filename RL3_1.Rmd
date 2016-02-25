@@ -130,11 +130,15 @@ Analysis of variance investigates the relationship between categorical variables
 
 * One-way ANOVA
 
+If there is only **ONE** categorical variable, perform a one-way ANOVA then.
+
 ```{r}
 
 ```
 
 * Two-way ANOVA
+
+If there are more than two categorical variables, perform a two-way ANOVA then.
 
 ```{r}
 
