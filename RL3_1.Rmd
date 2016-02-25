@@ -111,9 +111,35 @@ Whether 2 means are significantly different.
 Whether the means of 2 independent groups are different.
 
 ```{r}
-
+t.test(mtcars$mpg~mtcars$am)
 ```
 
 ## Chi-squared Test
 
+Whether the distribution of categorical variables of two groups differ.
+
+```{r}
+frequencyTable <- table(mtcars$am, mtcars$cyl)
+frequencyTable
+chisq.test(frequencyTable)
+```
+
 ## ANOVA
+
+Analysis of variance investigates the relationship between categorical variables and numerical variables.
+
+* One-way ANOVA
+
+```{r}
+
+```
+
+* Two-way ANOVA
+
+```{r}
+
+```
+
+## Reference
+
+* 
