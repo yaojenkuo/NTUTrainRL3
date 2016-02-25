@@ -28,28 +28,34 @@ sample(data, 10, replace=TRUE)
 
 ## Probability Distribution
 
-* The `dnorm()` function
+* The `rnorm()` function - Generates random numbers from normal distribution
 
 ```{r}
-
+# Generates 1,000 numbers from a normal with mean=0 and sd=1
+dataRnorm <- rnorm(1000, 0, 1)
+head(dataRnorm)
 ```
 
-* The `pnorm()` function
+* The `dnorm()` function - Probability Density Function(PDF)
 
 ```{r}
-
+# Gives the density (height of the PDF) of the normal with mean=0 and sd=1
+dataDnorm <- dnorm(0, mean=0, sd=1)
+dataDnorm
 ```
 
-* The `qnorm()` function
+* The `pnorm()` function - Cumulative Distribution Function(CDF)
 
 ```{r}
-
+# Gives the area under the standard normal curve to the left of 1.96
+dataPnorm <- pnorm(1.96, mean=0, sd=1)
 ```
 
-* The `rnorm()` function
+* The `qnorm()` function - Quantile Function – inverse of pnorm
 
 ```{r}
-
+# Gives the value at which the CDF of the standard normal
+dataQnorm <- qnorm(0.975, 0, 1)
 ```
 
 ## Descriptitve Statistics
@@ -133,7 +139,9 @@ Analysis of variance investigates the relationship between categorical variables
 If there is only **ONE** categorical variable, perform a one-way ANOVA then.
 
 ```{r}
-
+boxplot(mtcars$mpg~factor(mtcars$gear), xlab='gear', ylab='mpg')
+onewayAnova <- aov(mtcars$mpg~factor(mtcars$gear))
+summary(onewayAnova)
 ```
 
 * Two-way ANOVA
@@ -141,7 +149,11 @@ If there is only **ONE** categorical variable, perform a one-way ANOVA then.
 If there are more than two categorical variables, perform a two-way ANOVA then.
 
 ```{r}
-
+par(mfrow=c(1,2))
+boxplot(mtcars$mpg~factor(mtcars$gear), subset=(mtcars$am==1), xlab='gear', ylab='mpg', main='Manual')
+boxplot(mtcars$mpg~factor(mtcars$gear), subset=(mtcars$am==0), xlab='gear', ylab='mpg', main='Automatic')
+twowayAnova <- aov(mtcars$mpg~factor(mtcars$gear)*factor(mtcars$am))
+summary(twowayAnova)
 ```
 
 ## Reference
