@@ -108,7 +108,12 @@ binom.test(x=92, n=315, p=1/6)
 Whether 2 means are significantly different.
 
 ```{r}
-
+mpgMean <- mean(mtcars$mpg)
+mpgAutomatic <- mtcars$mpg[mtcars$am==0]
+boxplot(mtcars$mpg, mtcars$mpg[mtcars$am==0], ylab = "mpg", names=c("Overall","Automatic"))
+abline(h=mean(mtcars$mpg),lwd=2, col="red")
+abline(h=mean(mtcars$mpg[mtcars$am==0]),lwd=2, col="blue")
+t.test(mpgAutomatic, mu=mpgMean)
 ```
 
 * two sample t-test
@@ -116,6 +121,7 @@ Whether 2 means are significantly different.
 Whether the means of 2 independent groups are different.
 
 ```{r}
+boxplot(mtcars$mpg~mtcars$am, xlab='am', ylab='mpg')
 t.test(mtcars$mpg~mtcars$am)
 ```
 
