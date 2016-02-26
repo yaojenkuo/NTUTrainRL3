@@ -1,0 +1,24 @@
+---
+title: "Supervised Machine Learning"
+author: "Yao-Jen Kuo"
+date: "February, 2016"
+output: slidy_presentation
+---
+
+## Agenda
+
+* What is Machine Learning?
+* Regression Analysis
+
+## What is Machine Learning?
+
+* How do you recognize a tree?
+
+![Tree]("/images/tree.jpg")
+
+* How do banks decide to approve or reject a credit card application?
+
+![Credit Card]("/images/CreditCards.jpg")
+
+## Regression Analysis
+
