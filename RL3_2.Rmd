@@ -2,7 +2,10 @@
 title: "Supervised Machine Learning"
 author: "Yao-Jen Kuo"
 date: "February, 2016"
-output: slidy_presentation
+output:
+  slidy_presentation:
+    fig_width: 7
+    fig_height: 6
 ---
 
 ## Agenda
@@ -14,11 +17,11 @@ output: slidy_presentation
 
 * How do you recognize a tree?
 
-![Tree]("/images/tree.jpg")
+![Tree](images/tree.jpg)
 
 * How do banks decide to approve or reject a credit card application?
 
-![Credit Card]("/images/CreditCards.jpg")
+![Credit Card](images/CreditCards.jpg)
 
 ## Regression Analysis
 
