@@ -25,3 +25,16 @@ output:
 
 ## Regression Analysis
 
+* Single variable linear regression
+
+* Multiple variable linear regression
+
+* Polynomial regression
+
+* Robust linear regression
+
+* Generalized linear regression
+
+* Generalized additive
+
+## 
