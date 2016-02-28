@@ -31,6 +31,17 @@ output:
     * Patient sick/not sick
     * Ads profitable/not profitable
     * Answers correct/incorrect
+* Multi-class Classification
+    * Coins for vending machine
+    * Email for primary/social/promotion...
+    * First airbnb destination for US/UK...
+* Regression
+    * Climate data -> temperature/raining probability
+    * Company data -> stock price
+* Sructured Learning
+    * Sentence structuring
+    * Protein folding
+    * Speech parsing
 
 ## Recommended Studies
 
