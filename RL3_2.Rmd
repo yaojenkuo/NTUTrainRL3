@@ -27,6 +27,22 @@ output:
 
 * Single variable linear regression
 
+```{r}
+install.packages("car")
+library(car)
+plot(Quartet$x, Quartet$y1)
+lmFit <- lm(y1~x, Quartet)
+summary(lmFit)
+abline(lmFit, col="red")
+coefficients(lmFit) # Extract model coefficients
+confint(lmFit, level=0.95) # Computes confidence intervals for model parameters.
+fitted(lmFit) # Extract model fitted values
+residuals(lmFit) # Extract model residuals
+anova(lmFit) # Compute analysis of variance tables for fitted model object
+vcov(lmFit) # Calculate variance-covariance matrix for a fitted model object
+influence(lmFit) # Diagnose quality of regression fits
+```
+
 * Multiple variable linear regression
 
 * Polynomial regression
