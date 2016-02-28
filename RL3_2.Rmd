@@ -51,6 +51,11 @@ output:
 
 ## Regression Analysis
 
+* Fitting a linear regression
+* Summarizing linear model fit
+* Diagnostic Plots
+* 
+
 ## Fitting a linear regression
 
 ```{r}
