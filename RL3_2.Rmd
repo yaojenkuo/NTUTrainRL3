@@ -145,11 +145,21 @@ Dependent variable is normally distributed.
 
 ## Poisson
 
-Dependent variable is Poisson distributed.
+Dependent variable is Poisson distributed(count data).
+
+```{r}
+lmPoisson <- glm(breaks ~ tension, data=warpbreaks, family="poisson")
+summary(lmPoisson)
+```
 
 ## Binomial
 
-Dependent variable is binomially distributed.
+Dependent variable is binomially distributed(0 v.s. 1 data).
+
+```{r}
+lmBinomial <- glm(vs ~ hp+mpg+gear,data=mtcars, family=binomial)
+summary(lmBinomial)
+```
 
 ## Generalized additive
 
