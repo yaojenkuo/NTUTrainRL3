@@ -139,6 +139,18 @@ abline(lmFit, col="red")
 * Poisson
 * Binomial
 
+## Gaussian(default)
+
+Dependent variable is normally distributed.
+
+## Poisson
+
+Dependent variable is Poisson distributed.
+
+## Binomial
+
+Dependent variable is binomially distributed.
+
 ## Generalized additive
 
 ## 
