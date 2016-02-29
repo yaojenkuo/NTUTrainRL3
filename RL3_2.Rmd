@@ -42,6 +42,16 @@ output:
     * Sentence structuring
     * Protein folding
     * Speech parsing
+* Unsupervised Multi-class Classification: Clustering
+    * Articles->topics
+    * Consumer profiles->consumer groups
+* Unsupervised learning: Density estimation
+    * Traffic log->dangerous area
+* Unsupervised learning: Outlier detection
+    * Internet log->intrusion alert
+* Semi-supervised learning
+    * Face images with a few labeled
+    * Medicine data with a few labeled
 
 ## Recommended Studies
 
@@ -81,16 +91,37 @@ influence(lmFit) # Diagnose quality of regression fits
 
 ## Diagnostic Plots
 
+* Residuals vs Fitted verifies the assumption that the residuals and the fitted values are uncorrelated
+* Normal Q-Q verifies the assumption that residuals were normally distributed.
+* Scale-Location plot on the bottom-left is used to measure the square root of the standardized residuals against the fitted value
+* Resuduals vs Leverage verifies how each data point influences the regression
+
 ```{r}
 par(mfrow=c(2,2))
 plot(lmFit)
 ```
 
-* Multiple variable linear regression
+## Fitting a multiple variable linear regression
 
-* Polynomial regression
+## Fitting a polynomial regression
 
-* Robust linear regression
+```{r}
+plot(Quartet$x, Quartet$y2)
+lmFit <- lm(Quartet$y2~poly(Quartet$x,2))
+lines(sort(Quartet$x), lmFit$fit[order(Quartet$x)], col = "red")
+```
+
+## Robust linear regression
+
+An outlier in the dataset will move the regression line away from the mainstream. Apart from
+removing it, we can apply a robust linear regression to fit datasets containing outliers.
+
+```{r}
+plot(Quartet$x, Quartet$y3)
+library(MASS)
+lmFit <- rlm(Quartet$y3~Quartet$x)
+abline(lmFit, col="red")
+```
 
 * Generalized linear regression
 
