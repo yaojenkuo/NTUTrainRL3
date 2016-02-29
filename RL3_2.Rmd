@@ -123,8 +123,22 @@ lmFit <- rlm(Quartet$y3~Quartet$x)
 abline(lmFit, col="red")
 ```
 
-* Generalized linear regression
+```{r}
+plot(Quartet$x, Quartet$y3)
+lmFit <- lm(Quartet$y3~Quartet$x)
+abline(lmFit, col="red")
+```
 
-* Generalized additive
+## Case study on XXX data
+
+
+
+## Generalized linear regression
+
+* Gaussian(default)
+* Poisson
+* Binomial
+
+## Generalized additive
 
 ## 
