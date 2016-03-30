@@ -1,5 +1,5 @@
 ---
-title: "Regression Analysis"
+title: "Clustering"
 author: "Yao-Jen Kuo"
 date: "February, 2016"
 output:
