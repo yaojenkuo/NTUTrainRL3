@@ -7,6 +7,8 @@ output: slidy_presentation
 
 ## Agenda
 
+* Numeric data
+* Categorical data
 * Sampling
 * Probability Distribution
 * Descriptive Statistics
@@ -14,6 +16,12 @@ output: slidy_presentation
 * T-tests
 * Chi-squared Test
 * ANOVA
+
+## Numeric data
+
+* Histogram
+
+* The `summary()` function
 
 ## Sampling
 
