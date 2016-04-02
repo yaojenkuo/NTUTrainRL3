@@ -1,7 +1,7 @@
 ---
-title: "Regression Analysis"
+title: "衡量機器學習模型的表現"
 author: "Yao-Jen Kuo"
-date: "February, 2016"
+date: "June, 2016"
 output:
   slidy_presentation:
     fig_width: 7

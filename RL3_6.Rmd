@@ -1,9 +1,0 @@
----
-title: "Other Topics"
-author: "Yao-Jen Kuo"
-date: "February, 2016"
-output:
-  slidy_presentation:
-    fig_width: 7
-    fig_height: 6
----

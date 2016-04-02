@@ -1,7 +1,7 @@
 ---
-title: "Supervised Machine Learning"
+title: "基本統計方法"
 author: "Yao-Jen Kuo"
-date: "February, 2016"
+date: "June, 2016"
 output:
   slidy_presentation:
     fig_width: 7
@@ -10,157 +10,12 @@ output:
 
 ## Agenda
 
-* What is Machine Learning?
-* Regression Analysis
-
-## What is Machine Learning?
-
-* How do you recognize a tree?
-
-![Tree](images/tree.jpg)
-
-* How do banks decide to approve or reject a credit card application?
-
-![Credit Card](images/CreditCards.jpg)
-
-## Types of Learning
-
-* Binary Classification
-    * Credit approve/disapprove
-    * Email spam/non-spam
-    * Patient sick/not sick
-    * Ads profitable/not profitable
-    * Answers correct/incorrect
-* Multi-class Classification
-    * Coins for vending machine
-    * Email for primary/social/promotion...
-    * First airbnb destination for US/UK...
-* Regression
-    * Climate data -> temperature/raining probability
-    * Company data -> stock price
-* Sructured Learning
-    * Sentence structuring
-    * Protein folding
-    * Speech parsing
-* Unsupervised Multi-class Classification: Clustering
-    * Articles->topics
-    * Consumer profiles->consumer groups
-* Unsupervised learning: Density estimation
-    * Traffic log->dangerous area
-* Unsupervised learning: Outlier detection
-    * Internet log->intrusion alert
-* Semi-supervised learning
-    * Face images with a few labeled
-    * Medicine data with a few labeled
-
-## Recommended Studies
-
-* [Andrew Ng, Machine Learning](https://www.coursera.org/learn/machine-learning)
-
-* [林軒田，機器學習基石](https://www.youtube.com/user/hsuantien/playlists)
-
-## Regression Analysis
-
-* Fitting a linear regression
-* Summarizing linear model fit
-* Diagnostic Plots
-* 
-
-## Fitting a linear regression
-
-```{r}
-install.packages("car")
-library(car)
-plot(Quartet$x, Quartet$y1)
-lmFit <- lm(y1~x, Quartet)
-abline(lmFit, col="red")
-```
-
-## Summarizing linear model fit
-
-```{r}
-summary(lmFit)
-coefficients(lmFit) # Extract model coefficients
-confint(lmFit, level=0.95) # Computes confidence intervals for model parameters.
-fitted(lmFit) # Extract model fitted values
-residuals(lmFit) # Extract model residuals
-anova(lmFit) # Compute analysis of variance tables for fitted model object
-vcov(lmFit) # Calculate variance-covariance matrix for a fitted model object
-influence(lmFit) # Diagnose quality of regression fits
-```
-
-## Diagnostic Plots
-
-* Residuals vs Fitted verifies the assumption that the residuals and the fitted values are uncorrelated
-* Normal Q-Q verifies the assumption that residuals were normally distributed.
-* Scale-Location plot on the bottom-left is used to measure the square root of the standardized residuals against the fitted value
-* Resuduals vs Leverage verifies how each data point influences the regression
-
-```{r}
-par(mfrow=c(2,2))
-plot(lmFit)
-```
-
-## Fitting a multiple variable linear regression
-
-## Fitting a polynomial regression
-
-```{r}
-plot(Quartet$x, Quartet$y2)
-lmFit <- lm(Quartet$y2~poly(Quartet$x,2))
-lines(sort(Quartet$x), lmFit$fit[order(Quartet$x)], col = "red")
-```
-
-## Robust linear regression
-
-An outlier in the dataset will move the regression line away from the mainstream. Apart from
-removing it, we can apply a robust linear regression to fit datasets containing outliers.
-
-```{r}
-plot(Quartet$x, Quartet$y3)
-library(MASS)
-lmFit <- rlm(Quartet$y3~Quartet$x)
-abline(lmFit, col="red")
-```
-
-```{r}
-plot(Quartet$x, Quartet$y3)
-lmFit <- lm(Quartet$y3~Quartet$x)
-abline(lmFit, col="red")
-```
-
-## Case study on XXX data
-
-
-
-## Generalized linear regression
-
-* Gaussian(default)
-* Poisson
-* Binomial
-
-## Gaussian(default)
-
-Dependent variable is normally distributed.
-
-## Poisson
-
-Dependent variable is Poisson distributed(count data).
-
-```{r}
-lmPoisson <- glm(breaks ~ tension, data=warpbreaks, family="poisson")
-summary(lmPoisson)
-```
-
-## Binomial
-
-Dependent variable is binomially distributed(0 v.s. 1 data).
-
-```{r}
-lmBinomial <- glm(vs ~ hp+mpg+gear,data=mtcars, family=binomial)
-summary(lmBinomial)
-```
-
-## Generalized additive
-
-## 
+* Numeric data
+* Categorical data
+* Sampling
+* Probability Distribution
+* Descriptive Statistics
+* Correlations
+* T-tests
+* Chi-squared Test
+* ANOVA
