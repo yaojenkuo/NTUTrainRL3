@@ -41,14 +41,15 @@ output:
 
 ## 分類(範例)
 
-```{r}
-packages <- c("rpart", "rattle", "rpart.plot", "RColorBrewer")
-for (index in 1:length(packages)){
-  install.packages(packages[index])
-}
+```{r, results = 'hide', message = FALSE}
+packages <- c("rpart", "rattle", "rpart.plot", "RColorBrewer", "magrittr")
 sapply(X = packages, FUN = library, character.only = TRUE)
+```
+
+```{r}
 titanic <- read.csv(file = "C:/NTUTrainRL3/data/train.csv", header = TRUE)
 titanic <- titanic[, -c(4, 9, 11)] %>% na.omit(object = .)
+str(titanic)
 
 # Shuffle the dataset
 set.seed(1)
@@ -104,7 +105,16 @@ abline(reg = lmIcedTea$coefficients, col = "red", lwd = 2)
 ## 分群(範例)
 
 ```{r}
-
+# Structure of iris
+str(object = iris)
+# Set random seed. Don't remove this line.
+irisCluster <- iris[-5]
+species <- iris$Species
+kmeansIris<-kmeans(x = irisCluster, centers = 3)
+confusionMatrix <- table(x = species, y = kmeansIris$cluster, dnn = c("Actual", "Clustered"))
+confusionMatrix
+# Plot Petal.Width against Petal.Length, coloring by cluster
+plot(formula = Petal.Length ~ Petal.Width, data = irisCluster, col = kmeansIris$cluster, xlab = "花瓣寬度", ylab = "花瓣長度")
 ```
 
 ## 推薦延伸閱讀
