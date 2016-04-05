@@ -53,7 +53,7 @@ str(titanic)
 
 # Shuffle the dataset
 set.seed(1)
-n <- nrow(titanic)
+n <- nrow(x = titanic)
 shuffledTitanic <- titanic[sample(n), ]
 
 # Split the data in train and test
