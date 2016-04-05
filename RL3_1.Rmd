@@ -65,16 +65,18 @@ confusionMatrix <- table(test$Survived, prediction)
 ## 迴歸分析(範例)
 
 ```{r}
-# Build Linear Model
-library(ISLR)
-str(Wage)
-lmWage <- lm(wage ~ age, data = Wage)
-toBePredicted <- data.frame(age = 80)
-# Predict the wage for a 80-year old worker
-predicted <- predict(object = lmWage, newdata = toBePredicted)
-plot(Wage$wage ~ Wage$age, xlab = "年齡", ylab = "薪資")
-points(x = 80, y = predicted, col="green", cex = 2, pch = 16)
-abline(reg = lmWage$coefficients, col = "red", lwd = 2)
+# 氣溫與冰紅茶銷量
+temperature <- c(29, 28, 34, 31, 25, 29, 32, 31, 24, 33, 25, 31, 26, 30)
+icedTeaSales <- c(77, 62, 93, 84, 59, 64, 80, 75, 58, 91, 51, 73, 65, 84)
+toBePredicted <- data.frame(temperature = c(20,30))
+
+icedTeaData <- data.frame(temperature = temperature, icedTeaSales = icedTeaSales)
+lmIcedTea <- lm(formula = icedTeaSales ~ temperature, data = icedTeaData)
+predicted <- predict(object = lmIcedTea, newdata = toBePredicted)
+# 作圖
+plot(icedTeaSales ~ temperature, xlab = "當日最高氣溫(度)", ylab = "冰紅茶銷量(杯)")
+points(x = toBePredicted$temperature, y = predicted, col="green", cex = 2, pch = 16)
+abline(reg = lmIcedTea$coefficients, col = "red", lwd = 2)
 ```
 
 ## 分群
