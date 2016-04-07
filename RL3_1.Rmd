@@ -1,5 +1,5 @@
 ---
-title: "Introduction to Machine Learning"
+title: "淺談機器學習"
 author: "Yao-Jen Kuo"
 date: "June, 2016"
 output:

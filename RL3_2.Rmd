@@ -8,11 +8,24 @@ output:
     fig_height: 6
 ---
 
-## Agenda
+## 變數的種類
 
-* Numeric data
-* Categorical data
-* Sampling
+* 名目/類別型變數(Nominal/Categorical)
+* 數值型變數(Numeric)
+* 順序型變數(Ordinal)
+
+## 名目/類別型變數
+
+## 數值型變數
+
+## 順序型變數
+
+## 機率
+
+## 2變數的關聯
+
+## 獨立性檢定
+
 * Probability Distribution
 * Descriptive Statistics
 * Correlations
