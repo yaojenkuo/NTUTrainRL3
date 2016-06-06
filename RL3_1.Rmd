@@ -1,5 +1,5 @@
 ---
-title: "淺談機器學習"
+title: "Introduction to R and Machine Learning"
 author: "Yao-Jen Kuo"
 date: "June, 2016"
 output:
@@ -7,6 +7,41 @@ output:
     fig_width: 8
     fig_height: 5
 ---
+
+## 自我介紹
+
+* Senior Data Analyst at Coupang
+* Analytical Consultant at SAS
+* Assistant Manager at CTBC
+* http://yaojenkuo.github.io/
+* tonykuoyj@gmail.com
+
+## 如何設定R語言開發環境
+
+* [R Getting Started](https://github.com/yaojenkuo/RGettingStarted)
+
+## R語言的基本資料格式
+
+* Vector向量
+* Factor因素向量
+* Matrix矩陣
+* Data Frame資料框
+* List清單
+
+## 探索Data Frame資料框的基本函數
+
+* 善用`?`與`help()`來幫助你瞭解函數
+
+```{r}
+nrow(cars)
+ncol(cars)
+dim(cars)
+class(cars)
+str(cars)
+head(cars)
+tail(cars, n = 10)
+summary(cars)
+```
 
 ## 機器學習是什麼?
 
