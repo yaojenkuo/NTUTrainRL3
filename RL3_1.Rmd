@@ -20,6 +20,39 @@ output:
 
 * [R Getting Started](https://github.com/yaojenkuo/RGettingStarted)
 
+## 這門課的目標
+
+* 知道什麼問題可以用機器學習作為解決的方法
+* 使用R語言中**基本的**機器學習技巧
+
+## 這門課會涵蓋的內容
+
+* 簡介
+* 衡量機器學習模型的表現
+* 分類(Classification)
+* 迴歸分析(Regression)
+* 分群(Clustering)
+
+## 機器學習的特性
+
+* 從過往資料的特徵來對未知資料做判讀
+* 資料愈多應該要可以讓模型的表現愈好
+* 你怎麼認得一顆樹?
+
+![Tree](images/tree.jpg)
+
+## 可能是這樣子的過程
+
+|紅色比例|綠色比例|藍色比例|答案|
+|--------|--------|--------|----|
+|0.1|0.9|0.0|樹|
+|0.8|0.2|0.0|花|
+|0.0|0.1|0.9|海|
+|0.1|0.9|0.0|?|
+
+* 這樣的資料型態叫做Data Frame
+* 我們花一點時間了解R語言的基本資料格式
+
 ## R語言的基本資料格式
 
 * Vector向量
@@ -52,6 +85,8 @@ list <- list(vector1, factor1, matrix, df)
 
 ## 從基本資料格式中選取元素
 
+* 在R語言中我們使用中括號`[]`搭配`(列, 欄)`來選取元素
+
 ```{r}
 vector1[1]
 factor1[c(1, 2)]
@@ -63,7 +98,7 @@ list[[1]][1]
 
 ## 探索資料框的基本函數
 
-* 善用`?`與`help()`來幫助你瞭解函數
+* 善用`?`或`help()`來幫助你瞭解函數
 
 ```{r}
 nrow(cars)
@@ -76,11 +111,22 @@ tail(cars, n = 10)
 summary(cars)
 ```
 
-## 機器學習是什麼?
+## 什麼是機器學習?
 
-* 你怎麼認得一顆樹?
+* 什麼是樹
+* 購物籃推薦(Target)
+* 電影推薦(Netflix)
+* 無人車
+* 判別垃圾郵件
+* 在臉書照片上標註你自己與朋友
+* 預測2016年7月台幣兌日幣的匯率
 
-![Tree](images/tree.jpg)
+## 什麼不是機器學習?
+
+* 資料中出現最多的顏色是什麼?
+* 2016年波士頓馬拉松男子組冠軍的成績?
+* 哪一門課是系統訓練班人數最多的?
+* 計算2015年台灣的薪資中位數
 
 ## 機器學習的基本種類
 
@@ -89,14 +135,6 @@ summary(cars)
 	* 迴歸分析(Regression)
 * 非監督式學習
 	* 分群(Clustering)
-
-## 這門課會涵蓋的內容
-
-* 簡介
-* 衡量機器學習模型的表現
-* 分類
-* 迴歸分析
-* 分群
 
 ## 分類
 
@@ -161,8 +199,11 @@ icedTeaData <- data.frame(temperature = temperature, icedTeaSales = icedTeaSales
 lmIcedTea <- lm(formula = icedTeaSales ~ temperature, data = icedTeaData)
 predicted <- predict(lmIcedTea, newdata = toBePredicted)
 
+# 模型摘要
+summary(lmIcedTea)
+
 # 作圖
-plot(icedTeaSales ~ temperature, xlab = "當日最高氣溫(度)", ylab = "冰紅茶銷量(杯)", family = "STHeiti")
+plot(icedTeaSales ~ temperature, main = "依據氣溫預測冰紅茶銷量", xlab = "當日最高氣溫(度)", ylab = "冰紅茶銷量(杯)", family = "STHeiti")
 points(x = toBePredicted$temperature, y = predicted, col="green", cex = 2, pch = 18)
 abline(reg = lmIcedTea$coefficients, col = "red", lwd = 2)
 ```
@@ -182,13 +223,10 @@ str(object = iris)
 
 # 建立一個分群模型
 irisCluster <- iris[-5]
-species <- iris$Species
-kmeansIris<-kmeans(x = irisCluster, centers = 3)
-confusionMatrix <- table(x = species, y = kmeansIris$cluster, dnn = c("Actual", "Clustered"))
-confusionMatrix
+kmeansIris<-kmeans(irisCluster, centers = 3)
 
 # 作圖
-plot(formula = Petal.Length ~ Petal.Width, data = irisCluster, col = kmeansIris$cluster, xlab = "花瓣寬度", ylab = "花瓣長度", family = "STHeiti")
+plot(formula = Petal.Length ~ Petal.Width, data = irisCluster, col = kmeansIris$cluster, main = "將鳶尾花做分群", xlab = "花瓣寬度", ylab = "花瓣長度", family = "STHeiti")
 ```
 
 ## 推薦延伸閱讀
