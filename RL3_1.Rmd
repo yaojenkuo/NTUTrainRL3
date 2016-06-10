@@ -27,7 +27,6 @@ output:
 
 ## 這門課會涵蓋的內容
 
-* 簡介
 * 衡量機器學習模型的表現
 * 分類(Classification)
 * 迴歸分析(Regression)

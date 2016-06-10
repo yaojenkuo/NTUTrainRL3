@@ -1,34 +1,31 @@
 ---
-title: "基本統計方法"
+title: "衡量機器學習模型的表現"
 author: "Yao-Jen Kuo"
 date: "June, 2016"
 output:
   slidy_presentation:
-    fig_width: 7
-    fig_height: 6
+    fig_width: 8
+    fig_height: 5
 ---
 
-## 變數的種類
+## 好的機器學習模型
 
-* 名目/類別型變數(Nominal/Categorical)
-* 數值型變數(Numeric)
-* 順序型變數(Ordinal)
+一個好的機器學習模型大致上具有這幾個特性:
 
-## 名目/類別型變數
+* 準確度高
+* 計算時間短
+* 容易解釋
 
-## 數值型變數
+## 基本機器學習模型的對應衡量指標
 
-## 順序型變數
+|機器學習模型|衡量表現指標|
+|------------|------------|
+|分類(Classification)|混淆矩陣(Confusion Matrix)|
+|迴歸(Regression)|RMSE(Root Mean Squared Error)|
+|分群(Clustering)|Dunn's Index|
 
-## 機率
+## 混淆矩陣(Confusion Matrix)
 
-## 2變數的關聯
+## RMSE
 
-## 獨立性檢定
-
-* Probability Distribution
-* Descriptive Statistics
-* Correlations
-* T-tests
-* Chi-squared Test
-* ANOVA
+## Dunn's Index
