@@ -28,7 +28,40 @@ output:
 * Data Frame資料框
 * List清單
 
-## 探索Data Frame資料框的基本函數
+```{r}
+# Vectors
+vector1 <- 1:5
+vector2 <- c("a", "a", "b", "b", "c")
+vector3 <- c(TRUE, TRUE, FALSE, FALSE, TRUE)
+vector4 <- c(1:3, "a", TRUE)
+
+# Factors
+factor1 <- as.factor(vector2)
+factor2 <- as.factor(c("fast", "moderate", "slow", "moderate", "slow"))
+factor3 <- ordered(factor2, levels = c("slow", "moderate", "fast"))
+
+# Matrix
+matrix <- matrix(1:12, nrow = 3)
+
+# Data Frame
+df <- data.frame(vector1, vector2, vector3)
+
+# List
+list <- list(vector1, factor1, matrix, df)
+```
+
+## 從基本資料格式中選取元素
+
+```{r}
+vector1[1]
+factor1[c(1, 2)]
+matrix[1, 2]
+df[, 1]
+df$vector1
+list[[1]][1]
+```
+
+## 探索資料框的基本函數
 
 * 善用`?`與`help()`來幫助你瞭解函數
 
@@ -49,17 +82,17 @@ summary(cars)
 
 ![Tree](images/tree.jpg)
 
-## 機器學習的種類
+## 機器學習的基本種類
 
 * 監督式學習
-	* 分類
-	* 迴歸分析
+	* 分類(Classification)
+	* 迴歸分析(Regression)
 * 非監督式學習
-	* 分群
+	* 分群(Clustering)
 
 ## 這門課會涵蓋的內容
 
-* 基本統計方法
+* 簡介
 * 衡量機器學習模型的表現
 * 分類
 * 迴歸分析
