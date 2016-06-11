@@ -20,11 +20,19 @@ output:
 
 |機器學習模型|衡量表現指標|
 |------------|------------|
-|分類(Classification)|混淆矩陣(Confusion Matrix)|
-|迴歸(Regression)|RMSE(Root Mean Squared Error)|
-|分群(Clustering)|Dunn's Index|
+|分類(Classification)|混淆矩陣Confusion Matrix|
+|迴歸(Regression)|均方根誤差RMSE(Root Mean Squared Error)|
+|分群(Clustering)|唐恩指數Dunn's Index|
 
-## 混淆矩陣(Confusion Matrix)
+## 混淆矩陣Confusion Matrix
+
+* 以二元分類器為例:
+
+![Source: Google Search](images/confusionMatrix.png)
+
+$$Precision = \frac{TP}{TP + FP}$$
+
+$$Recall = \frac{TP}{TP + FN}$$
 
 ## RMSE
 
