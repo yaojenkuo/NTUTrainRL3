@@ -30,10 +30,70 @@ output:
 
 ![Source: Google Search](images/confusionMatrix.png)
 
+$$Accuracy = \frac{TP + TN}{TP + FP + FN + TN}$$
+
 $$Precision = \frac{TP}{TP + FP}$$
 
 $$Recall = \frac{TP}{TP + FN}$$
 
-## RMSE
+## 混淆矩陣Confusion Matrix - Hands On
 
-## Dunn's Index
+* [資料集](https://www.kaggle.com/c/titanic/data)
+
+```{r}
+# 載入需要的套件
+library(magrittr)
+library(rpart)
+
+# 讀取資料
+titanic <- read.csv("/Users/tkuo/ntu_train/NTUTrainRL3/data/train.csv", header = TRUE)
+titanic <- titanic[, c(2, 3, 5, 6)] %>% na.omit
+titanic$Survived <- factor(titanic$Survived, levels = c(1, 0))
+str(titanic)
+
+# 建立一個決策樹模型
+set.seed(1)
+treeModel <- rpart(Survived ~ ., data = titanic, method = "class")
+titanicToBePredicted <- titanic[, -1]
+prediction <- predict(treeModel, newdata = titanicToBePredicted, type = "class")
+
+# 將混淆矩陣印出來
+confusionMatrix <- table(titanic$Survived, prediction, dnn = c("Actual", "Predicted"))
+confusionMatrix
+
+# 獲得TP, TN, FP, FN
+TP <- confusionMatrix[1, 1]
+TN <- confusionMatrix[2, 2]
+FP <- confusionMatrix[2, 1]
+FN <- confusionMatrix[1, 2]
+
+# 計算Accuracy, Precision, Recall
+accuracy <- (TP + TN)/(TP + TN + FP + FN)
+precision <- TP/(TP + FP)
+recall <- TP/(TP + FN)
+
+# 印出Accuracy, Precision, Recall
+accuracy
+precision
+recall
+```
+
+## 混淆矩陣Confusion Matrix - Do It Yourself
+
+* 這次換你囉, 加入`Fare`, `Cabin`, 與`Embarked`這三個變數試試看!
+
+## 均方根誤差RMSE
+
+* 資料點與預測迴歸線的平均距離
+
+$$RMSE = \sqrt{\frac{1}{N}\sum_{i=1}^N (y_i - \hat y_i)^2}$$
+
+![Source: Google Search](images/rmse.jpg)
+
+## 唐恩指數Dunn's Index
+
+* 同一個群集中的**相似度**要高
+* 不同群集之間的**相似度**要低
+* 所以我們使用**唐恩指數**來判別分群模型的表現
+
+$$Dunn's\,Index = \frac {最小的群集間距離}{最大的群集直徑}$$
