@@ -90,6 +90,38 @@ $$RMSE = \sqrt{\frac{1}{N}\sum_{i=1}^N (y_i - \hat y_i)^2}$$
 
 ![Source: Google Search](images/rmse.jpg)
 
+## 均方根誤差RMSE - Hands on
+
+```{r}
+# 氣溫與冰紅茶銷量
+temperature <- c(29, 28, 34, 31, 25, 29, 32, 31, 24, 33, 25, 31, 26, 30)
+icedTeaSales <- c(77, 62, 93, 84, 59, 64, 80, 75, 58, 91, 51, 73, 65, 84)
+icedTeaData <- data.frame(temperature, icedTeaSales)
+
+# 建立一個線性迴歸模型
+lmFit <- lm(formula = icedTeaSales ~ temperature, data = icedTeaData)
+icedTeaDataToBePredicted <- data.frame(icedTeaData[, -2])
+prediction <- predict(lmFit, newdata = icedTeaDataToBePredicted)
+RMSE <- sqrt(sum( (icedTeaData$icedTeaSales - prediction) ^ 2) / nrow(icedTeaData))
+RMSE
+```
+
+## 均方根誤差RMSE - Do It Yourself(1)
+
+* 來這裡下載資料集[airUCI](https://archive.ics.uci.edu/ml/datasets/Airfoil+Self-Noise#)
+* 只使用`freq`, `angle`, 以及`chLength`這三個變數來預測`dec`
+* 計算RMSE1
+
+```{r}
+airUCI <- read.csv("/Users/tkuo/ntu_train/NTUTrainRL3/data/airUCI.csv", header = FALSE, col.names = c("freq", "angle", "chLength", "velocity", "thickness", "dec"))
+```
+
+## 均方根誤差RMSE - Do It Yourself(2)
+
+* 再加入`velocity`以及`chLength`這兩個變數, 共5個變數來預測`dec`
+* 計算RMSE2
+* 比較RMSE1與RMSE2
+
 ## 唐恩指數Dunn's Index
 
 * 同一個群集中的**相似度**要高
@@ -97,3 +129,33 @@ $$RMSE = \sqrt{\frac{1}{N}\sum_{i=1}^N (y_i - \hat y_i)^2}$$
 * 所以我們使用**唐恩指數**來判別分群模型的表現
 
 $$Dunn's\,Index = \frac {最小的群集間距離}{最大的群集直徑}$$
+
+## 唐恩指數Dunn's Index - Hands on
+
+```{r}
+# 看看鳶尾花資料集的結構
+str(iris)
+
+# 建立一個分群模型
+irisCluster <- iris[-5]
+kmeansIris<-kmeans(irisCluster, centers = 3)
+
+# 作圖
+plot(formula = Petal.Length ~ Petal.Width, data = irisCluster, col = kmeansIris$cluster, main = "將鳶尾花做分群", xlab = "花瓣寬度", ylab = "花瓣長度", family = "STHeiti")
+
+# 計算WSS與BSS的比例
+WSS <- kmeansIris$tot.withinss
+BSS <- kmeansIris$betweenss
+ratio <- WSS/BSS
+ratio
+```
+
+## 唐恩指數Dunn's Index - Do It Yourself
+
+* 來這裡下載資料集[seedsUCI](https://archive.ics.uci.edu/ml/datasets/seeds)
+* 仿照前例, 計算WSS/BSS
+
+```{r}
+seedsUCI <- read.csv("/Users/tkuo/ntu_train/NTUTrainRL3/data/seedsUCI.csv", header = FALSE, col.names = c("area", "perimeter", "compactness", "length", "width", "asymmetry", "grooveLength", "type"))
+seedsUCIToBeClustered <- seedsUCI[, -8]
+```

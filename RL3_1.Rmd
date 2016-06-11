@@ -218,7 +218,7 @@ abline(reg = lmIcedTea$coefficients, col = "red", lwd = 2)
 
 ```{r}
 # 看看鳶尾花資料集的結構
-str(object = iris)
+str(iris)
 
 # 建立一個分群模型
 irisCluster <- iris[-5]
