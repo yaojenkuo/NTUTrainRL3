@@ -1,9 +1,11 @@
 ---
-title: "衡量機器學習模型的表現"
+title: "訓練與測試樣本"
 author: "Yao-Jen Kuo"
 date: "June, 2016"
 output:
   slidy_presentation:
-    fig_width: 7
-    fig_height: 6
+    fig_width: 8
+    fig_height: 5
 ---
+
+## 
