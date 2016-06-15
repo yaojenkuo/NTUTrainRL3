@@ -159,3 +159,7 @@ ratio
 seedsUCI <- read.csv("/Users/tkuo/ntu_train/NTUTrainRL3/data/seedsUCI.csv", header = FALSE, col.names = c("area", "perimeter", "compactness", "length", "width", "asymmetry", "grooveLength", "type"))
 seedsUCIToBeClustered <- seedsUCI[, -8]
 ```
+
+## 訓練與測試
+
+## 誤差與變異
