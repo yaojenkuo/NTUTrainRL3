@@ -160,6 +160,117 @@ seedsUCI <- read.csv("/Users/tkuo/ntu_train/NTUTrainRL3/data/seedsUCI.csv", head
 seedsUCIToBeClustered <- seedsUCI[, -8]
 ```
 
+## 關於機器學習, 資料探勘與統計
+
+* 機器學習對於**未知資料**的預測較為在意
+* 資料探勘對於**現有資料**的樣態或找出有趣因子更為在意
+* 統計對於模型與資料的配適度更為在意
+* 資料探勘跟機器學習其實相輔相成，實務上你很難區隔
+* 統計是實現機器學習的方法之一
+
 ## 訓練與測試
 
+* 實務上我們要將資料分為**訓練(training)**與**測試(test)**
+* 這兩組資料不重疊
+* 建議比例為70%與30%
+* 在監督式學習(分類與迴歸)使用，因為非監督式學習(分群)資料並沒有答案
+
+## 怎麼切分你的訓練與測試
+
+* 如果是做分類，類型的分佈在訓練與測試資料中的分佈應該要相似
+* 不要遺漏任何一種類別
+* 把資料做洗牌以後再做切分
+
+![Source: Google Search](images/training_test_sets.png)
+
+## 怎麼切分你的訓練與測試 - Hands on
+
+* 洗牌我們可以善用`sample()`函數，查詢一下`sample()`函數吧！
+
+```{r}
+titanic <- read.csv("/Users/tkuo/ntu_train/NTUTrainRL3/data/train.csv", header = TRUE)
+titanic <- titanic %>% na.omit
+
+# 洗牌
+n <- nrow(titanic)
+set.seed(123)
+shuffledTitanic <- titanic[sample(n), ]
+
+# 看看洗牌前與洗牌後的titanic
+head(titanic)
+head(shuffledTitanic)
+
+# 依照70%:30%的比例切分training與test
+trainingIndices <- 1:round(0.7 * n)
+training <- shuffledTitanic[trainingIndices, ]
+testIndices <- (round(0.7 * n) + 1):n
+test <- shuffledTitanic[testIndices, ]
+
+# 印出training與test的結構
+str(training)
+str(test)
+```
+
+## 怎麼切分你的訓練與測試 - Do It Yourself
+
+* 我希望training約有536個觀測值, test約有178個觀測值
+
+## 更細膩精準地切分你的訓練與測試
+
+* 在前面的例子我們只使用一次`sample()`函數
+* 更細膩的方法稱為**交叉驗證(cross validation)**
+* 最後以平均的指標(可能是accuracy, precision或recall...etc.)作為結果
+
+[Source: Google Search](images/cross_validation.png)
+
+## 更細膩精準地切分你的訓練與測試 - Hands on
+
+* 用`Pclass`, `Sex`, 與`Age`作為預測變數就好
+* k-fold cross validation, k = 4
+
+```{r}
+titanic <- read.csv("/Users/tkuo/ntu_train/NTUTrainRL3/data/train.csv", header = TRUE)
+titanic <- titanic[, c("Survived", "Pclass", "Sex", "Age")]
+titanic <- titanic %>% na.omit
+titanic$Survived <- as.factor(titanic$Survived)
+titanic$Pclass <- as.factor(titanic$Pclass)
+
+# 洗牌
+n <- nrow(titanic)
+set.seed(123)
+shuffledTitanic <- titanic[sample(n), ]
+
+# 設定亂數種子
+set.seed(123)
+
+# accuracies向量
+accuracies <- c()
+
+for (i in 1:4) {
+  # test的列數
+  indices <- (((i-1) * round((1/4)*nrow(shuffledTitanic))) + 1):((i*round((1/4) * nrow(shuffledTitanic))))
+  training <- shuffledTitanic[-indices,]
+  test <- shuffledTitanic[indices,]
+  
+  # 建立決策樹模型
+  tree <- rpart(Survived ~ ., training, method = "class")
+  
+  # 預測
+  prediction <- predict(tree, test, type="class")
+  
+  # 建立混淆矩陣
+  confusionMatrix <- table(test$Survived, prediction)
+  
+  # 把每次的accuracy放回accuracies向量
+  accuracies[i] <- sum(diag(confusionMatrix))/(sum(confusionMatrix))
+}
+# 平均這4個accuracy
+mean(accuracies)
+```
+
+## 更細膩精準地切分你的訓練與測試 - Do It Yourself
+
+* k-fold cross validation, k = 8
+
 ## 誤差與變異
+
