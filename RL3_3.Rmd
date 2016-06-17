@@ -1,5 +1,5 @@
 ---
-title: "訓練與測試樣本"
+title: "分類(Classification)"
 author: "Yao-Jen Kuo"
 date: "June, 2016"
 output:

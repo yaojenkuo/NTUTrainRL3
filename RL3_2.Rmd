@@ -292,7 +292,7 @@ mean(accuracies)
 debtIncomeRatio <- c(1, 2.112, 4.123, 1.863, 2.973, 1.687, 5.891, 3.167, 1.23, 2.441, 3.555, 3.25, 1.333)
 default <- c(0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1)
 defaultDataTrain <- data.frame(debtIncomeRatio, default)
-defaultDataTrain$default <- as.factor(defaultData$default)
+defaultDataTrain$default <- factor(defaultDataTrain$default)
 
 # 分類器
 default_classifier <- function(x){

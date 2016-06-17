@@ -1,9 +1,9 @@
 ---
-title: "迴歸分析"
+title: "分群(Clustering)"
 author: "Yao-Jen Kuo"
-date: "February, 2016"
+date: "June, 2016"
 output:
   slidy_presentation:
-    fig_width: 7
-    fig_height: 6
+    fig_width: 8
+    fig_height: 5
 ---
