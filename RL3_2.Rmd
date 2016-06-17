@@ -221,7 +221,7 @@ str(test)
 * 更細膩的方法稱為**交叉驗證(cross validation)**
 * 最後以平均的指標(可能是accuracy, precision或recall...etc.)作為結果
 
-[Source: Google Search](images/cross_validation.png)
+![Source: Google Search](images/cross_validation.png)
 
 ## 更細膩精準地切分你的訓練與測試 - Hands on
 
@@ -272,5 +272,71 @@ mean(accuracies)
 
 * k-fold cross validation, k = 8
 
-## 誤差與變異
+## Underfitting vs. Overfitting?
 
+* 你是否常常聽到人家說underfitting或overfitting?
+
+![Source: Google Search](images/fittingDiagram_1.png)
+
+![Source: Google Search](images/fittingDiagram_2.png)
+
+* 在**適用性**與**精確性**之間取得良好的平衡
+
+## Underfitting vs. Overfitting? - Hands on
+
+* 我們的分類器overfitting(對訓練資料集的分類完全正確, accuracy = 100%)
+* 但是對測試資料集的分類accuracy僅有62.5%
+
+```{r}
+# 倒帳資料集
+debtIncomeRatio <- c(1, 2.112, 4.123, 1.863, 2.973, 1.687, 5.891, 3.167, 1.23, 2.441, 3.555, 3.25, 1.333)
+default <- c(0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1)
+defaultDataTrain <- data.frame(debtIncomeRatio, default)
+defaultDataTrain$default <- as.factor(defaultData$default)
+
+# 分類器
+default_classifier <- function(x){
+  prediction <- rep(NA, length(x))
+  prediction[x > 4] <- 1
+  prediction[x >= 3 & x <= 4] <- 0
+  prediction[x >= 2.2 & x < 3] <- 1
+  prediction[x >= 1.4 & x < 2.2] <- 0
+  prediction[x > 1.25 & x < 1.4] <- 1
+  prediction[x <= 1.25] <- 0
+  return(prediction)
+}
+
+# training資料集的accuracy
+defaultPredictionOverTrain <- default_classifier(defaultDataTrain$debtIncomeRatio)
+confusionMatrixOverTrain <- table(defaultDataTrain$default, defaultPredictionOverTrain)
+accuracyOverTrain <- sum(diag(confusionMatrixOverTrain)) / sum(confusionMatrixOverTrain)
+accuracyOverTrain
+
+# test資料集
+debtIncomeRatio <- c(1.5, 	4.941, 	3.429, 	3.493, 	3.38, 	3.689, 	1, 	6.761, 	2.195, 	2.857, 	1.883, 	1.744, 	2.325, 	1.25, 	1.8, 	2.5, 	4.617, 	2.206, 	8.323, 	3.764, 	1.932, 	3.153, 	1.983, 	3.812, 	4.295, 	4.5, 	1.3, 	1, 	5.009, 	5.888, 	1, 	3.456, 	3.379, 	1.755, 	2.333, 	2.188, 	1.406, 	1.857, 	3.707, 	3.766, 	2.93, 	2.076, 	1.9, 	1.684, 	2.769, 	4.571, 	3.029, 	3.628)
+default <- c(0, 	1, 	1, 	1, 	0, 	1, 	0, 	1, 	1, 	0, 	0, 	0, 	0, 	0, 	1, 	0, 	1, 	0, 	1, 	0, 	0, 	0, 	0, 	1, 	0, 	1, 	0, 	0, 	1, 	0, 	0, 	1, 	0, 	0, 	0, 	0, 	0, 	0, 	1, 	0, 	1, 	0, 	0, 	1, 	1, 	0, 	0, 	0)
+defaultDataTest <- data.frame(debtIncomeRatio, default)
+defaultDataTest$default <- as.factor(defaultDataTest$default)
+
+# test資料集的accuracy
+defaultPredictionOverTest <- default_classifier(defaultDataTest$debtIncomeRatio)
+confusionMatrixOverTest <- table(defaultDataTest$default, defaultPredictionOverTest)
+accuracyOverTest <- sum(diag(confusionMatrixOverTest)) / sum(confusionMatrixOverTest)
+accuracyOverTest
+```
+
+## Underfitting vs. Overfitting? - Do It Yourself
+
+* 用新的分類器對訓練資料分類並計算accuracy
+* 用新的分類器對測試資料分類並計算accuracy
+* 跟前面的例子比較一下
+
+```{r}
+# 分類器
+default_classifier <- function(x){
+  prediction <- rep(NA, length(x))
+  prediction[x > 4] <- 1
+  prediction[x <= 4] <- 0
+  return(prediction)
+}
+```
