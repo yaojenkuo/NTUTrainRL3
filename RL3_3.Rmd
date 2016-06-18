@@ -154,4 +154,76 @@ accuracyIG <- sum(diag(confusionMatIG)) / sum(confusionMatIG)
 accuracyIG
 ```
 
-## 
+## k最近鄰分類法(k-Nearest Neighbors)
+
+* 用一個二元分類的圖例說明
+* k = 1
+
+![Source: DataCamp](images/knn_1.png)
+
+![Source: DataCamp](images/knn_2.png)
+
+* 如果 k = 5 就會從最近的 5 個點中哪個顏色較多決定新的資料點屬於什麼顏色，所以 k-nn 的 k 應該是一個奇數
+
+* 計算距離的方式常見有兩種:
+    * 歐幾里得距離(Eucledian Distiance)
+    * 曼哈頓距離(Manhattan Distance)
+
+$$d_E(a, b) = \sqrt {\sum_{i=1} ^ D (a_i - b_i) ^ 2}$$
+
+$$d_M(a, b) = \sum_{i = 1} ^ D \vert{a_i - b_i}\vert$$
+
+## 單位標準化
+
+* 既然這個演算法使用距離作分類, 我們必須對這些變數的單位進行**標準化**
+
+|height(m)|weight(kg)|
+|---------|----------|
+|1.92     |92        |
+|1.92     |91        |
+|1.83     |92        |
+----------------------
+
+|height(cm)|weight(kg)|
+|----------|----------|
+|192       |92        |
+|192       |91        |
+|183       |92        |
+-----------------------
+
+* 標準化公式
+
+$$\frac{x - min(x)}{max(x) - min(x)}$$
+
+## 單位標準化 - Hands on
+
+* 將 `titanic` 資料集的Pclass標準化
+
+```{r}
+titanic <- read.csv("/Users/tkuo/ntu_train/NTUTrainRL3/data/train.csv", header = TRUE)
+titanic <- titanic[, c(2, 3, 6)] %>% na.omit
+titanic$Survived <- factor(titanic$Survived, levels = c("1", "0"))
+
+# 切分訓練測試樣本
+set.seed(1)
+n <- nrow(titanic)
+shuffledTitanic <- titanic[sample(n), ]
+trainIndices <- 1:round(0.7 * n)
+train <- shuffledTitanic[trainIndices, ]
+testIndices <- (round(0.7 * n) + 1):n
+test <- shuffledTitanic[testIndices, ]
+
+# 先將標準答案獨立出來
+trainLabels <- train$Survived
+testLabels <- test$Survived
+
+# 獨立預測變數
+knnTrain <- train[, -c(1)]
+knnTest <- test[, -c(1)]
+
+# 標準化Pclass
+min_class <- min(knnTrain$Pclass)
+max_class <- max(knn_train$Pclass)
+knn_train$Pclass <- (knn_train$Pclass - min_class) / (max_class - min_class)
+knn_test$Pclass <- (knn_test$Pclass - min_class) / (max_class - min_class)
+```
