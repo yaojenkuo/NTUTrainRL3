@@ -8,6 +8,150 @@ output:
     fig_height: 5
 ---
 
+## 摘要
+
+* 決策樹
+* k最近鄰分類法(k-Nearest Neighbors)
+* ROC曲線
+
 ## 分類的特性
 
-* 自動依據已知資料為未知資料做分類
+* 自動依據已知資料為未知資料做預測分類
+* 一個人整體平均而言是開心還是不開心?
+    * 數值型變數
+        * 身高
+        * 體重
+        * 年收入
+        * 年紀
+        * ...
+    * 類別型變數
+        * 感情狀態
+        * 出生地
+        * 有無運動習慣
+        * 有無房
+        * 有無車
+        * ...
+
+## 決策樹的外型與名稱
+
+* 節點(Nodes)
+    * 根(Root)
+    * 葉(Leafs)
+* 枝(Edges)
+
+* 以Titanic資料集的決策樹為例:
+
+![Source: Google Search](images/treeTitanic.png)
+
+## 一個決策樹是怎麼產生的
+
+* 決策樹終極的目標其實是希望每一**葉**(Leaf)都只有一種分類
+* 但是在實務上幾乎是不可能的
+* 在每一個節點上面有兩件事情要決定:
+    * 選一個變數來切分資料
+    * 決定變數的切分門檻
+* 常用的決定指標叫做**資訊獲利(Information Gain)**
+    * 如果資料集切分得好, 資訊獲利值高
+    * 資料集切分得不好, 資訊獲利值低
+    * 在每個節點上, 都要選擇最高資訊獲利值的變數與切分門檻
+* 而 `rpart()` 預設是用另一個常用的指標叫做**吉尼不純度(Gini Impurity)**
+    * 如果資料集切分得好, 吉尼不純度低
+    * 資料集切分得不好, 吉尼不純度高
+    * 在每個節點上, 都要選擇最低吉尼不純度的變數與切分門檻
+
+## 一個決策樹是怎麼產生的 - Hands on
+
+* 每個節點中都有三行資訊
+    * 第一個數字告訴你這個節點資料中最多的類別是什麼
+    * 第二組數字告訴你類別的比例
+    * 第三個數字告訴你這個節點佔所有訓練資料的比例
+
+```{r}
+library(rpart)
+library(rattle)
+library(rpart.plot)
+library(RColorBrewer)
+library(magrittr)
+
+# 載入titanic資料集
+set.seed(1)
+titanic <- read.csv("/Users/tkuo/ntu_train/NTUTrainRL3/data/train.csv", header = TRUE)
+titanic <- titanic[, c(2, 3, 5, 6)] %>% na.omit
+titanic$Survived <- factor(titanic$Survived, levels = c("1", "0"))
+titanic$Pclass <- factor(titanic$Pclass)
+
+# 建立訓練與測試樣本
+set.seed(1)
+n <- nrow(titanic)
+shuffledTitanic <- titanic[sample(n), ]
+trainIndices <- 1:round(0.7 * n)
+train <- shuffledTitanic[trainIndices, ]
+testIndices <- (round(0.7 * n) + 1):n
+test <- shuffledTitanic[testIndices, ]
+
+# 建立決策樹模型
+tree <- rpart(Survived ~ ., data = train, method = "class")
+
+# 畫決策樹
+fancyRpartPlot(tree)
+
+# 預測測試樣本
+prediction <- predict(tree, test, type = "class")
+
+# 計算accuracy
+confusionMatrix <- table(test$Survived, prediction)
+accuracy <- sum(diag(confusionMatrix)) / sum(confusionMatrix)
+accuracy
+```
+
+## 一個決策樹是怎麼產生的 - Do It Yourself
+
+* 加入`SibSp`, `Fare`, `Cabin`與`Embarked`再玩一次!
+
+## 修剪(pruning)是什麼?
+
+* 你還記得我們上一個章節教的Overfitting嗎?
+* 修剪就是為了要避免Overfitting的情況產生!
+
+## 修剪(pruning)是什麼? - Hands on
+
+* `rpart()`有一個參數是`control = rpart.control`, 輸入 `?rpart.control`
+* `rpart.control(cp = )` 是complexity parameter, 如果 `cp` 值愈小, accuracy就會愈高, 但也愈可能Overfitting
+* `prune()`函數可以針對Overfitting的決策樹模型修改 `cp`
+
+```{r}
+# 建立一個Overfitting的決策樹模型(cp = 0.00001)
+set.seed(1)
+treeComplex <- rpart(Survived ~ ., train, method = "class", control = rpart.control(cp = 0.00001))
+
+# 作圖
+fancyRpartPlot(treeComplex)
+
+# 修剪
+treePruned <- prune(treeComplex, cp=0.01)
+
+# 作圖
+fancyRpartPlot(treePruned)
+```
+
+## 修剪(pruning)是什麼? - Do It Yourself
+
+* 把前一個加入加入`SibSp`, `Fare`, `Cabin`與`Embarked`的決策樹模型 `cp` 指定為 0.00001, 並使用`prune()`函數進行修剪為預設的cp = 0.01
+
+## 改用資訊獲利(Information Gain)試試看 - Hands on
+
+* 前面我們使用預設的**吉尼不純度(Gini Impurity)**作為切分資料集的決定指標
+* 若想改為使用**資訊獲利(Information Gain)**在建立模型的時候要多指定一個參數 `parms = list(split = "information")`
+* 輸入 `?rpart` 看看 `parms` 的參數說明
+
+```{r}
+# 建立
+set.seed(1)
+treeIG <- rpart(Survived ~ ., train, method = "class", parms = list(split = "information"))
+predictionIG <- predict(treeIG, test, type = "class")
+confusionMatIG <- table(test$Survived, predictionIG)
+accuracyIG <- sum(diag(confusionMatIG)) / sum(confusionMatIG)
+accuracyIG
+```
+
+## 
