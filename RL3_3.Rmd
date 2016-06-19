@@ -181,14 +181,14 @@ $$d_M(a, b) = \sum_{i = 1} ^ D \vert{a_i - b_i}\vert$$
 |---------|----------|
 |1.92     |92        |
 |1.92     |91        |
-|1.83     |92        |
+|2.03     |92        |
 ----------------------
 
 |height(cm)|weight(kg)|
 |----------|----------|
 |192       |92        |
 |192       |91        |
-|183       |92        |
+|203       |92        |
 -----------------------
 
 * 標準化公式
@@ -197,7 +197,7 @@ $$\frac{x - min(x)}{max(x) - min(x)}$$
 
 ## 單位標準化 - Hands on
 
-* 將 `titanic` 資料集的Pclass標準化
+* 將 `titanic` 資料集的 Pclass 標準化
 
 ```{r}
 titanic <- read.csv("/Users/tkuo/ntu_train/NTUTrainRL3/data/train.csv", header = TRUE)
@@ -227,3 +227,33 @@ max_class <- max(knn_train$Pclass)
 knn_train$Pclass <- (knn_train$Pclass - min_class) / (max_class - min_class)
 knn_test$Pclass <- (knn_test$Pclass - min_class) / (max_class - min_class)
 ```
+
+## 單位標準化 - Do It Yourself
+
+* 將`titanic` 資料集的 Age 標準化
+
+## k最近鄰分類法(k-Nearest Neighbors) - Hands on
+
+* `knn()` 函數在 `class` 套件中, 使用前要安裝與載入
+* 使用 `install.packages()` 與 `library()` 進行安裝和載入
+* `knn()` 函數我們主要使用 4 個參數:
+    * `train`
+    * `test`
+    * `cl`
+    * `k`
+
+```{r}
+library(class)
+set.seed(1)
+pred <- knn(train=knn_train, test=knn_test, cl=train_labels, k=5)
+```
+
+## k最近鄰分類法(k-Nearest Neighbors) - Do It Yourself
+
+* 把混淆矩陣算出來並且印出!
+
+## 如何選擇 k 值?
+
+## 如何選擇 k 值? - Hands on
+
+## 如何選擇 k 值? - Do It Yourself
