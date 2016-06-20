@@ -14,7 +14,7 @@ output:
 
 * 準確度高
 * 計算時間短
-* 容易解釋
+* 可以適用到未知資料
 
 ## 基本機器學習模型的對應衡量指標
 
@@ -22,7 +22,9 @@ output:
 |------------|------------|
 |分類(Classification)|混淆矩陣Confusion Matrix|
 |迴歸(Regression)|均方根誤差RMSE(Root Mean Squared Error)|
-|分群(Clustering)|唐恩指數Dunn's Index|
+|                |R平方R-Squared|
+|分群(Clustering)|WSS/BSS比例|
+|                |唐恩指數Dunn's Index|
 
 ## 混淆矩陣Confusion Matrix
 
@@ -32,9 +34,9 @@ output:
 
 $$Accuracy = \frac{TP + TN}{TP + FP + FN + TN}$$
 
-$$Precision = \frac{TP}{TP + FP}$$
+$$TPR = \frac{TP}{TP + FN}$$
 
-$$Recall = \frac{TP}{TP + FN}$$
+$$FPR = \frac{FP}{FP + TN}$$
 
 ## 混淆矩陣Confusion Matrix - Hands On
 
@@ -67,15 +69,15 @@ TN <- confusionMatrix[2, 2]
 FP <- confusionMatrix[2, 1]
 FN <- confusionMatrix[1, 2]
 
-# 計算Accuracy, Precision, Recall
+# 計算accuracy, TPR, FPR
 accuracy <- (TP + TN)/(TP + TN + FP + FN)
-precision <- TP/(TP + FP)
-recall <- TP/(TP + FN)
+TPR <- TP/(TP + FP)
+FPR <- FP/(FP + TN)
 
-# 印出Accuracy, Precision, Recall
+# 計算accuracy, TPR, FPR
 accuracy
-precision
-recall
+TPR
+FPR
 ```
 
 ## 混淆矩陣Confusion Matrix - Do It Yourself
@@ -86,7 +88,7 @@ recall
 
 * 資料點與預測迴歸線的平均距離
 
-$$RMSE = \sqrt{\frac{1}{N}\sum_{i=1}^N (y_i - \hat y_i)^2}$$
+$$RMSE = \sqrt{\frac{1}{N}\sum_{i=1}^N (y_i - \hat{y}_i)^2}$$
 
 ![Source: Google Search](images/rmse.jpg)
 
@@ -121,6 +123,37 @@ airUCI <- read.csv("/Users/tkuo/ntu_train/NTUTrainRL3/data/airUCI.csv", header =
 * 再加入`velocity`以及`chLength`這兩個變數, 共5個變數來預測`dec`
 * 計算RMSE2
 * 比較RMSE1與RMSE2
+
+## R平方R-Squared
+
+* y變數的變異有多少比例可以被x變數預測
+
+$$SS_res = \sum_{i=1}^N(y_i - \hat{y}_i) ^ 2$$
+$$SS_tot = \sum_{i=1}^N(y_i - \bar{y}) ^ 2$$
+$$R^2 = 1 - \frac{SS_{res}}{SS_{tot}}$$
+
+## R平方R-Squared - Hands on
+
+```{r}
+icedTeaSalesEst <- predict(lmIcedTea, newdata = data.frame(icedTeaData[, 1]))
+
+# 計算R-squared
+res <- icedTeaData$icedTeaSales - icedTeaSalesEst
+ss_res <- sum (res ^ 2)
+ss_tot <- sum( (icedTeaData$icedTeaSales - mean(icedTeaData$icedTeaSales))^2 )
+r_sq <- 1 - ss_res / ss_tot
+r_sq
+
+# 跟 summary() 的結果比較
+summary(lmIcedTea)$r.squared
+```
+
+## R平方R-Squared - Do It Yourself
+
+* 延續使用資料集[airUCI](https://archive.ics.uci.edu/ml/datasets/Airfoil+Self-Noise#)
+* 只使用`freq`, `angle`, 以及`chLength`這三個變數來預測`dec`
+* 自行計算R平方
+* 與 `summary()` 的結果比較
 
 ## 唐恩指數Dunn's Index
 
@@ -219,7 +252,7 @@ str(test)
 
 * 在前面的例子我們只使用一次`sample()`函數
 * 更細膩的方法稱為**交叉驗證(cross validation)**
-* 最後以平均的指標(可能是accuracy, precision或recall...etc.)作為結果
+* 最後以平均的指標(可能是accuracy或TPR...etc.)作為結果
 
 ![Source: Google Search](images/cross_validation.png)
 
