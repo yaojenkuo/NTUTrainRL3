@@ -74,15 +74,14 @@ library(RColorBrewer)
 library(magrittr)
 
 # 載入titanic資料集
-set.seed(1)
 titanic <- read.csv("/Users/tkuo/ntu_train/NTUTrainRL3/data/train.csv", header = TRUE)
 titanic <- titanic[, c(2, 3, 5, 6)] %>% na.omit
 titanic$Survived <- factor(titanic$Survived, levels = c("1", "0"))
 titanic$Pclass <- factor(titanic$Pclass)
 
 # 建立訓練與測試樣本
-set.seed(1)
 n <- nrow(titanic)
+set.seed(123)
 shuffledTitanic <- titanic[sample(n), ]
 trainIndices <- 1:round(0.7 * n)
 train <- shuffledTitanic[trainIndices, ]
@@ -193,6 +192,8 @@ $$d_M(a, b) = \sum_{i = 1} ^ D \vert{a_i - b_i}\vert$$
 
 * 標準化公式
 
+    * Min Max Method
+
 $$\frac{x - min(x)}{max(x) - min(x)}$$
 
 ## 單位標準化 - Hands on
@@ -204,6 +205,27 @@ titanic <- read.csv("/Users/tkuo/ntu_train/NTUTrainRL3/data/train.csv", header =
 titanic <- titanic[, c(2, 3, 6)] %>% na.omit
 titanic$Survived <- factor(titanic$Survived, levels = c("1", "0"))
 
+# 標準化Pclass
+minPclass <- min(titanic$Pclass)
+maxPclass <- max(titanic$Pclass)
+titanic$Pclass <- (titanic$Pclass - minPclass) / (maxPclass - minPclass)
+```
+
+## 單位標準化 - Do It Yourself
+
+* 將`titanic` 資料集的 Age 也進行標準化
+
+## k最近鄰分類法(k-Nearest Neighbors) - Hands on
+
+* `knn()` 函數在 `class` 套件中, 使用前要安裝與載入
+* 使用 `install.packages()` 與 `library()` 進行安裝和載入
+* `knn()` 函數我們主要使用 4 個參數:
+    * `train`
+    * `test`
+    * `cl`
+    * `k`
+
+```{r}
 # 切分訓練測試樣本
 set.seed(1)
 n <- nrow(titanic)
@@ -221,39 +243,127 @@ testLabels <- test$Survived
 knnTrain <- train[, -c(1)]
 knnTest <- test[, -c(1)]
 
-# 標準化Pclass
-min_class <- min(knnTrain$Pclass)
-max_class <- max(knn_train$Pclass)
-knn_train$Pclass <- (knn_train$Pclass - min_class) / (max_class - min_class)
-knn_test$Pclass <- (knn_test$Pclass - min_class) / (max_class - min_class)
-```
-
-## 單位標準化 - Do It Yourself
-
-* 將`titanic` 資料集的 Age 標準化
-
-## k最近鄰分類法(k-Nearest Neighbors) - Hands on
-
-* `knn()` 函數在 `class` 套件中, 使用前要安裝與載入
-* 使用 `install.packages()` 與 `library()` 進行安裝和載入
-* `knn()` 函數我們主要使用 4 個參數:
-    * `train`
-    * `test`
-    * `cl`
-    * `k`
-
-```{r}
+# 建立模型
 library(class)
 set.seed(1)
-pred <- knn(train=knn_train, test=knn_test, cl=train_labels, k=5)
+pred <- knn(train=knnTrain, test=knnTest, cl=trainLabels, k=5)
 ```
 
 ## k最近鄰分類法(k-Nearest Neighbors) - Do It Yourself
 
-* 把混淆矩陣算出來並且印出!
-
-## 如何選擇 k 值?
+* 建立混淆矩陣並將accuracy計算印出。
 
 ## 如何選擇 k 值? - Hands on
 
-## 如何選擇 k 值? - Do It Yourself
+* 我們無法用直覺來選擇 k = ?, 不如就用程式幫我們決定吧!
+
+```{r}
+range <- seq(from = 1, to = 300, by = 2)
+accuracies <- rep(NA, length(range))
+set.seed(1)
+
+for (i in range) {
+  prediction <- knn(train = knnTrain, test = knnTest, cl = trainLabels, k = i)
+  confusionMatrix <- table(testLabels, prediction)
+  accuracies[i] <- sum(diag(confusionMatrix))/sum(confusionMatrix)
+}
+
+plot(range, accuracies, xlab="k")
+which.max(accs)
+```
+
+## 在k最近鄰分類法中納入類別型變數
+
+* 要使用**虛擬變數(dummy variable)**來對我們的類別型變數重新編碼
+* 如果是二元的類別型變數:
+
+|性別|男性|女性|
+|----|----|----|
+|男  |1   |0   |
+|女  |0   |1   |
+|... |... |... |
+
+* 如果是三元的類別型變數:
+
+|母語|閩南語|國語|客家語|
+|----|------|----|------|
+|閩南語|1   |0   |0     |
+|國語|0     |1   |0     |
+|客家語|0   |0   |1     |
+|.. .|...   |... |...   |
+
+* 以此類推...
+
+## 二元分類模型的表現指標 - AUC
+
+* 除了常用的 `accuracy` 來衡量１二元分類模型的表現之外, 我們還有一個指標叫做 `AUC(Area Under Curve)`
+* `AUC` 的 Curve 指的是ROC曲線, **R**eiceiver **O**perator **C**haracteristic Curve
+* 建立ROC曲線時我們仍舊仰賴我們熟悉的**混淆矩陣**
+* x軸: False Positive Rate
+
+$$FPR = \frac{FP}{FP + TN}$$
+
+* y軸: True Positive Rate
+
+$$TPR = \frac{TP}{TP + FN}$$
+
+![Source: Google Search](images/rocc.png)
+
+* `AUC` 就是計算 ROC 曲線底下的面積, 這個數字愈接近1, 就表示分類分得愈好; 愈接近0.5就表示分類分得不好
+
+## AUC - Hands on
+
+* 先前我們在使用 `predict()` 函數的時候是直接預測分類類別, 現在我們要改為 `class = "prob"`, 意即模型預測的 `存活機率`
+* 我們要使用 `ROCR` 這個套件協助我們作圖
+
+```{r}
+# 建立訓練與測試樣本
+set.seed(123)
+n <- nrow(titanic)
+shuffledTitanic <- titanic[sample(n), ]
+trainIndices <- 1:round(0.7 * n)
+train <- shuffledTitanic[trainIndices, ]
+testIndices <- (round(0.7 * n) + 1):n
+test <- shuffledTitanic[testIndices, ]
+
+# ROC Curve
+set.seed(123)
+tree <- rpart(Survived ~ ., train, method = "class")
+probabilities <- predict(tree, test, type = "prob")[,1]
+library(ROCR)
+pred <- prediction(probabilities, labels = test$Survived)
+perf <- performance(pred, "tpr", "fpr")
+plot(perf)
+
+# AUC
+perf <- performance(pred, "auc")
+perf@y.values[[1]]
+```
+
+## 用AUC比較模型 - Hands on
+
+```{r}
+# 載入titanic資料集
+titanic <- read.csv("/Users/tkuo/ntu_train/NTUTrainRL3/data/train.csv", header = TRUE)
+titanic <- titanic[, -c(1, 4, 9)] %>% na.omit
+titanic$Survived <- factor(titanic$Survived, levels = c("1", "0"))
+titanic$Pclass <- factor(titanic$Pclass)
+
+# 建立訓練與測試樣本
+n <- nrow(titanic)
+set.seed(123)
+shuffledTitanic <- titanic[sample(n), ]
+trainIndices <- 1:round(0.7 * n)
+trainComp <- shuffledTitanic[trainIndices, ]
+testIndices <- (round(0.7 * n) + 1):n
+testComp <- shuffledTitanic[testIndices, ]
+
+# ROC Curve
+set.seed(123)
+treeComp <- rpart(Survived ~ ., trainComp, method = "class")
+probabilitiesComp <- predict(treeComp, testComp, type = "prob")[,1]
+predComp <- prediction(probabilitiesComp, labels = testComp$Survived)
+perfComp <- performance(predComp, "tpr", "fpr")
+plot(perf, main = "ROC Curves", col = "blue", lwd = 2)
+plot(perfComp, add = TRUE, col = "green", lwd = 2)
+```
