@@ -23,7 +23,7 @@ output:
 |分類(Classification)|混淆矩陣Confusion Matrix|
 |迴歸(Regression)|均方根誤差RMSE(Root Mean Squared Error)|
 |                |R平方R-Squared|
-|分群(Clustering)|WSS/BSS比例|
+|分群(Clustering)|WSS/TSS比例|
 |                |唐恩指數Dunn's Index|
 
 ## 混淆矩陣Confusion Matrix
@@ -155,15 +155,25 @@ summary(lmIcedTea)$r.squared
 * 自行計算R平方
 * 與 `summary()` 的結果比較
 
-## 唐恩指數Dunn's Index
+## WSS / TSS 比例
 
 * 同一個群集中的**相似度**要高
 * 不同群集之間的**相似度**要低
-* 所以我們使用**唐恩指數**來判別分群模型的表現
+* 所以我們先使用**WSS / TSS**來判別分群模型的表現
 
-$$Dunn's\,Index = \frac {最小的群集間距離}{最大的群集直徑}$$
+* 組內距離平方和WSS(Within Cluster Sum of Squares)
 
-## 唐恩指數Dunn's Index - Hands on
+$$Min.\,WSS = \sum_{i=1}^{N_C}\sum_{x \in C_i}d(x,\,\bar{x}_{C_i})^2$$
+
+* 組間距離平方和BSS(Between Cluster Sum of Squares)
+
+$$Max.\,BSS = \sum_{i=1}^{N_C}\lvert C_i \rvert \cdot d(\bar{x}_{C_i},\,\bar{x})^2$$
+
+* 總離均差平方和TSS(Total Cluster Sum of Squares)
+
+$$TSS = WSS + BSS$$
+
+## WSS / TSS 比例 - Hands on
 
 ```{r}
 # 看看鳶尾花資料集的結構
@@ -176,17 +186,17 @@ kmeansIris<-kmeans(irisCluster, centers = 3)
 # 作圖
 plot(formula = Petal.Length ~ Petal.Width, data = irisCluster, col = kmeansIris$cluster, main = "將鳶尾花做分群", xlab = "花瓣寬度", ylab = "花瓣長度", family = "STHeiti")
 
-# 計算WSS與BSS的比例
+# 計算WSS/TSS的比例
 WSS <- kmeansIris$tot.withinss
 BSS <- kmeansIris$betweenss
-ratio <- WSS/BSS
+ratio <- WSS/(WSS + BSS)
 ratio
 ```
 
-## 唐恩指數Dunn's Index - Do It Yourself
+## WSS / TSS 比例 - Do It Yourself
 
 * 來這裡下載資料集[seedsUCI](https://archive.ics.uci.edu/ml/datasets/seeds)
-* 仿照前例, 計算WSS/BSS
+* 仿照前例, 計算WSS/TSS
 
 ```{r}
 seedsUCI <- read.csv("/Users/tkuo/ntu_train/NTUTrainRL3/data/seedsUCI.csv", header = FALSE, col.names = c("area", "perimeter", "compactness", "length", "width", "asymmetry", "grooveLength", "type"))
@@ -360,12 +370,12 @@ accuracyOverTest
 
 ## Underfitting vs. Overfitting? - Do It Yourself
 
-* 用新的分類器對訓練資料分類並計算accuracy
-* 用新的分類器對測試資料分類並計算accuracy
+* 用新的分類器對**訓練**資料分類並計算accuracy
+* 用新的分類器對**測試**資料分類並計算accuracy
 * 跟前面的例子比較一下
 
 ```{r}
-# 分類器
+# 新的分類器
 default_classifier <- function(x){
   prediction <- rep(NA, length(x))
   prediction[x > 4] <- 1

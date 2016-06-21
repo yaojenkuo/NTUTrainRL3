@@ -7,3 +7,68 @@ output:
     fig_width: 8
     fig_height: 5
 ---
+
+## 摘要
+
+* k-means分群
+* 衡量表現與正規化
+* 階層式分群
+
+## 分群(Clustering)
+
+* 非監督式學習
+* 訓練資料集是沒有答案的, 所以沒有對與錯
+* 組內差異小
+* 組間差異大
+* 差異是以觀測值之間的**距離**作為度量
+    * 歐幾里德距離, 曼哈頓距離, ...
+* 應用 e.g.
+    * STP行銷的S(客戶分群)
+    * 極端值偵測
+    * 預處理(pre-processing)資料
+    * ...
+
+## 組內距離平方和與組間距離平方和
+
+* 組內距離平方和WSS(Within Cluster Sum of Squares)
+
+$$Min.\,WSS = \sum_{i=1}^{N_C}\sum_{x \in C_i}d(x,\,\bar{x}_{C_i})^2$$
+
+* 組間距離平方和BSS(Between Cluster Sum of Squares)
+
+$$Max.\,BSS = \sum_{i=1}^{N_C}\lvert C_i \rvert \cdot d(\bar{x}_{C_i},\,\bar{x})^2$$
+
+## k-means演算法
+
+* 隨便放 k 個中心點
+* 依照各點與 k 個中心點的距離標記分群
+* 然後將中心點移到各群的中心
+* 重複上兩個步驟一直到中心點的移動已經收斂
+* e.g. k = 2
+
+![Source: stanford.edu](images/kmeansViz.png)
+
+## k 要怎麼選擇
+
+* 隨著 k 增加, WSS一定會持續下降
+* 因此如果我們讓 k = 觀測值數目, 一定可以得到一個 WSS 最高, BSS 最低的結果
+* 但這個不會是我們想要的分群方法
+* 所以我們要找的 k 是讓 WSS 下降效率開始變小的
+* 實務上常使用**陡坡圖**來找**手肘點**
+
+![Source: Google Search](images/screePlot.png)
+
+## k-means - Hands on
+
+* 使用 `kmeans()` 函數, 輸入 `?kmeans` 查詢這個函數的用法
+* `centers` 就是 k 值
+* `nstart` 是指重新隨意放 k 個中心點的次數, 一般建議 `nstart >= 10`
+
+```{r}
+iris_km <- iris[, -5]
+set.seed(123)
+fit_km <- kmeans(iris_km, nstart=20, centers=3)
+table(fit_km$cluster, iris[, 5])
+plot(iris_km$Petal.Width, iris_km$Petal.Length, col=fit_km$cluster)
+```
+
