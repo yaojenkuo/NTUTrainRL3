@@ -1,5 +1,5 @@
 ---
-title: "Introduction to R and Machine Learning"
+title: "淺談R語言與機器學習"
 author: "Yao-Jen Kuo"
 date: "June, 2016"
 output:
@@ -10,7 +10,7 @@ output:
 
 ## 自我介紹
 
-* Senior Data Analyst at Coupang
+* Senior Data Analyst at Coupang(We are hiring!)
 * Analytical Consultant at SAS
 * Assistant Manager at CTBC
 * http://yaojenkuo.github.io/
@@ -24,13 +24,14 @@ output:
 
 * 知道什麼問題可以用機器學習作為解決的方法
 * 使用R語言中**基本的**機器學習技巧
+* 能夠用主管聽得懂的話解釋這些基本的技巧
 
 ## 這門課會涵蓋的內容
 
 * 衡量機器學習模型的表現
-* 分類(Classification)
+* 分類(Classification): 決策樹, k-NN
 * 迴歸分析(Regression)
-* 分群(Clustering)
+* 分群(Clustering): k-means, 階層式
 
 ## 機器學習的特性
 
@@ -40,7 +41,7 @@ output:
 
 ![Tree](images/tree.jpg)
 
-## 可能是這樣子的過程
+## 你的大腦可能是這樣子的過程
 
 |紅色比例|綠色比例|藍色比例|答案|
 |--------|--------|--------|----|
@@ -50,7 +51,7 @@ output:
 |0.1|0.9|0.0|?|
 
 * 這樣的資料型態叫做Data Frame
-* 我們花一點時間了解R語言的基本資料格式
+* 我們花一點時間了解R語言的基本資料格式(請上過R語言玩資料的同學多包涵, 或者利用這個時間溫習)
 
 ## R語言的基本資料格式
 
@@ -68,8 +69,8 @@ vector3 <- c(TRUE, TRUE, FALSE, FALSE, TRUE)
 vector4 <- c(1:3, "a", TRUE)
 
 # Factors
-factor1 <- as.factor(vector2)
-factor2 <- as.factor(c("fast", "moderate", "slow", "moderate", "slow"))
+factor1 <- factor(vector2)
+factor2 <- factor(c("fast", "moderate", "slow", "moderate", "slow"))
 factor3 <- ordered(factor2, levels = c("slow", "moderate", "fast"))
 
 # Matrix
@@ -91,7 +92,7 @@ vector1[1]
 factor1[c(1, 2)]
 matrix[1, 2]
 df[, 1]
-df$vector1
+df$vector1#data frame可以使用 `$`
 list[[1]][1]
 ```
 
@@ -140,11 +141,10 @@ summary(cars)
 * 目標:預測新資料的類別
 * 利用歷史資料建立出分類器
 * 利用分類器預測新資料所屬類別
-* 應用:
-	* 醫療診斷
-	* 影像辨識
 
-## 分類(範例)
+## 分類(決策樹範例)
+
+* 到[Kaggle](https://www.kaggle.com/c/titanic/data)將資料集 `train.csv` 下載到本機
 
 ```{r, results = 'hide', message = FALSE, warning= FALSE}
 # 載入需要使用的套件
@@ -159,8 +159,8 @@ titanic <- titanic[, -c(4, 9, 11)] %>% na.omit
 str(titanic)
 
 # 隨機排列資料集
-set.seed(1)
 n <- nrow(titanic)
+set.seed(123)
 shuffledTitanic <- titanic[sample(n), ]
 
 # 將資料集分為訓練與測試
@@ -177,15 +177,15 @@ confusionMatrix <- table(x = test$Survived, y = prediction, dnn=c("Actual", "Pre
 confusionMatrix
 ```
 
+* 這裡的 train, test 跟 Kaggle 提供的很容易混淆, 一定要搞清楚
+
 ## 迴歸分析
 
 * 目標:預測新資料的數值
 * 利用歷史資料建立出迴歸模型
 * 利用迴歸模型預測新資料的數值
-* 應用:
-	* 信用評分
 
-## 迴歸分析(範例)
+## 迴歸分析(單變數迴歸範例)
 
 ```{r}
 # 氣溫與冰紅茶銷量
@@ -211,10 +211,8 @@ abline(reg = lmIcedTea$coefficients, col = "red", lwd = 2)
 
 * 目標:將資料分成群組
 * 掌握組內差異小、組間差異大的原則
-* 應用:
-	* 客戶分群
 
-## 分群(範例)
+## 分群(k-means 範例)
 
 ```{r}
 # 看看鳶尾花資料集的結構
@@ -222,13 +220,22 @@ str(iris)
 
 # 建立一個分群模型
 irisCluster <- iris[-5]
-kmeansIris<-kmeans(irisCluster, centers = 3)
+kmeansIris<-kmeans(irisCluster, centers = 3, nstart = 10)
 
 # 作圖
 plot(formula = Petal.Length ~ Petal.Width, data = irisCluster, col = kmeansIris$cluster, main = "將鳶尾花做分群", xlab = "花瓣寬度", ylab = "花瓣長度", family = "STHeiti")
 ```
 
-## 推薦延伸閱讀
+## Do It Yourself
+
+* 註冊一個[Kaggle](https://www.kaggle.com/)帳號
+* 將[UCI Repository](https://archive.ics.uci.edu/ml/index.html)加入**我的最愛**
+* 註冊一個[Github](https://github.com/)帳號
+* 把 R 跟 R Studio 在自己的電腦上安裝好
+
+## 深入鑽研
 
 * [Andrew Ng, Machine Learning](https://www.coursera.org/learn/machine-learning)
+* [Johns Hopkins University, Practical Machine Learning](https://www.coursera.org/learn/practical-machine-learning)
 * [林軒田，機器學習基石](https://www.youtube.com/user/hsuantien/playlists)
+* [林軒田，機器學習技法](https://www.youtube.com/playlist?list=PLXVfgk9fNX2IQOYPmqjqWsNUFl2kpk1U2)
