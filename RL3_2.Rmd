@@ -13,7 +13,7 @@ output:
 一個好的機器學習模型大致上具有這幾個特性:
 
 * 準確度高
-* 計算時間短
+* 計算時間短(2007 Netflix Prize)
 * 可以適用到未知資料
 
 ## 基本機器學習模型的對應衡量指標
@@ -32,11 +32,28 @@ output:
 
 ![Source: Google Search](images/confusionMatrix.png)
 
+* 有很多的衡量指標由混淆矩陣衍生而來:
+
 $$Accuracy = \frac{TP + TN}{TP + FP + FN + TN}$$
+
+* 光使用 Accuracy 來判定會有什麼問題? 
+* 假設有一個預測罕見疾病的分類器, 這個罕見疾病的比例大約是1%
+* 我們的分類器很粗糙, 它一律猜測所有觀測值都沒有病:
+
+|     |TRUE|FALSE|
+|-----|----|-----|
+|TRUE |990 |10   |
+|FALSE|0   |0    |
+
+$$Accuracy = \frac{990 + 0}{990 + 10 + 0 + 0} = 0.99$$
+
+* 因此關於混淆矩陣我們還有其他的指標:
 
 $$TPR = \frac{TP}{TP + FN}$$
 
-$$FPR = \frac{FP}{FP + TN}$$
+$$TNR = \frac{TN}{TN + FP}$$
+
+* 還有precision與recall...但我們先緩一緩吧...
 
 ## 混淆矩陣Confusion Matrix - Hands On
 
@@ -71,10 +88,11 @@ FN <- confusionMatrix[1, 2]
 
 # 計算accuracy, TPR, FPR
 accuracy <- (TP + TN)/(TP + TN + FP + FN)
+accuracy <- sum(diag(confusionMatrix))/sum(confusionMatrix)# 試試這樣算
 TPR <- TP/(TP + FP)
 FPR <- FP/(FP + TN)
 
-# 計算accuracy, TPR, FPR
+# accuracy, TPR, FPR
 accuracy
 TPR
 FPR
@@ -83,6 +101,7 @@ FPR
 ## 混淆矩陣Confusion Matrix - Do It Yourself
 
 * 這次換你囉, 加入`Fare`, `Cabin`, 與`Embarked`這三個變數試試看!
+* 計算 accuracy, TPR與FPR
 
 ## 均方根誤差RMSE
 
@@ -111,6 +130,7 @@ RMSE
 ## 均方根誤差RMSE - Do It Yourself(1)
 
 * 來這裡下載資料集[airUCI](https://archive.ics.uci.edu/ml/datasets/Airfoil+Self-Noise#)
+* 使用常用的函數暸解 `airUCI` 的結構
 * 只使用`freq`, `angle`, 以及`chLength`這三個變數來預測`dec`
 * 計算RMSE1
 
@@ -128,14 +148,14 @@ airUCI <- read.csv("/Users/tkuo/ntu_train/NTUTrainRL3/data/airUCI.csv", header =
 
 * y變數的變異有多少比例可以被x變數預測
 
-$$SS_res = \sum_{i=1}^N(y_i - \hat{y}_i) ^ 2$$
-$$SS_tot = \sum_{i=1}^N(y_i - \bar{y}) ^ 2$$
+$$SS_{res} = \sum_{i=1}^N(y_i - \hat{y}_i) ^ 2$$
+$$SS_{tot} = \sum_{i=1}^N(y_i - \bar{y}) ^ 2$$
 $$R^2 = 1 - \frac{SS_{res}}{SS_{tot}}$$
 
 ## R平方R-Squared - Hands on
 
 ```{r}
-icedTeaSalesEst <- predict(lmIcedTea, newdata = data.frame(icedTeaData[, 1]))
+icedTeaSalesEst <- predict(lmFit, newdata = data.frame(icedTeaData[, 1]))
 
 # 計算R-squared
 res <- icedTeaData$icedTeaSales - icedTeaSalesEst
@@ -145,7 +165,7 @@ r_sq <- 1 - ss_res / ss_tot
 r_sq
 
 # 跟 summary() 的結果比較
-summary(lmIcedTea)$r.squared
+summary(lmFit)$r.squared
 ```
 
 ## R平方R-Squared - Do It Yourself
