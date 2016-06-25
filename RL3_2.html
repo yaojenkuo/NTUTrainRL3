@@ -112,7 +112,9 @@ Yao-Jen Kuo
 </ul>
 <p><span class="math display">\[Accuracy = \frac{TP + TN}{TP + FP + FN + TN}\]</span></p>
 <ul>
-<li>光使用 Accuracy 來判定會有什麼問題? 假設有一個預測罕見疾病的分類器, 這個罕見疾病的比例大約是1%, 而我們的分類器很粗糙, 它一律猜測所有觀測值都沒有病, 那這個混淆矩陣會長這樣:</li>
+<li>光使用 Accuracy 來判定會有什麼問題?</li>
+<li>假設有一個預測罕見疾病的分類器, 這個罕見疾病的比例大約是1%</li>
+<li>我們的分類器很粗糙, 它一律猜測所有觀測值都沒有病:</li>
 </ul>
 <table>
 <thead>
@@ -135,8 +137,14 @@ Yao-Jen Kuo
 </tr>
 </tbody>
 </table>
+<p><span class="math display">\[Accuracy = \frac{990 + 0}{990 + 10 + 0 + 0} = 0.99\]</span></p>
 <ul>
-<li></li>
+<li>因此關於混淆矩陣我們還有其他的指標:</li>
+</ul>
+<p><span class="math display">\[TPR = \frac{TP}{TP + FN}\]</span></p>
+<p><span class="math display">\[FPR = \frac{FP}{FP + TN}\]</span></p>
+<ul>
+<li>還有其他的…但我們先緩一緩吧…</li>
 </ul>
 </div>
 <div id="confusion-matrix---hands-on" class="slide section level2">
@@ -161,7 +169,7 @@ titanic$Survived &lt;-<span class="st"> </span><span class="kw">factor</span>(ti
 ##  - attr(*, &quot;na.action&quot;)=Class 'omit'  Named int [1:177] 6 18 20 27 29 30 32 33 37 43 ...
 ##   .. ..- attr(*, &quot;names&quot;)= chr [1:177] &quot;6&quot; &quot;18&quot; &quot;20&quot; &quot;27&quot; ...</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 建立一個決策樹模型</span>
-<span class="kw">set.seed</span>(<span class="dv">1</span>)
+<span class="kw">set.seed</span>(<span class="dv">123</span>)
 treeModel &lt;-<span class="st"> </span><span class="kw">rpart</span>(Survived ~<span class="st"> </span>., <span class="dt">data =</span> titanic, <span class="dt">method =</span> <span class="st">&quot;class&quot;</span>)
 titanicToBePredicted &lt;-<span class="st"> </span>titanic[, -<span class="dv">1</span>]
 prediction &lt;-<span class="st"> </span><span class="kw">predict</span>(treeModel, <span class="dt">newdata =</span> titanicToBePredicted, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)
@@ -181,10 +189,11 @@ FN &lt;-<span class="st"> </span>confusionMatrix[<span class="dv">1</span>, <spa
 
 <span class="co"># 計算accuracy, TPR, FPR</span>
 accuracy &lt;-<span class="st"> </span>(TP +<span class="st"> </span>TN)/(TP +<span class="st"> </span>TN +<span class="st"> </span>FP +<span class="st"> </span>FN)
+accuracy &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">diag</span>(confusionMatrix))/<span class="kw">sum</span>(confusionMatrix)<span class="co"># 試試這樣算</span>
 TPR &lt;-<span class="st"> </span>TP/(TP +<span class="st"> </span>FP)
 FPR &lt;-<span class="st"> </span>FP/(FP +<span class="st"> </span>TN)
 
-<span class="co"># 計算accuracy, TPR, FPR</span>
+<span class="co"># accuracy, TPR, FPR</span>
 accuracy</code></pre></div>
 <pre><code>## [1] 0.8165266</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">TPR</code></pre></div>
@@ -196,6 +205,8 @@ accuracy</code></pre></div>
 <h1>混淆矩陣Confusion Matrix - Do It Yourself</h1>
 <ul>
 <li>這次換你囉, 加入<code>Fare</code>, <code>Cabin</code>, 與<code>Embarked</code>這三個變數試試看!</li>
+<li>印出混淆矩陣</li>
+<li>計算 accuracy, TPR與FPR</li>
 </ul>
 </div>
 <div id="rmse" class="slide section level2">
@@ -230,6 +241,7 @@ RMSE</code></pre></div>
 <li>來這裡下載資料集<a href="https://archive.ics.uci.edu/ml/datasets/Airfoil+Self-Noise#">airUCI</a></li>
 <li>使用常用的函數暸解 <code>airUCI</code> 的結構</li>
 <li>只使用<code>freq</code>, <code>angle</code>, 以及<code>chLength</code>這三個變數來預測<code>dec</code></li>
+<li>使用 <code>+</code> 在 <code>formula</code> 連接多個變數</li>
 <li>計算RMSE1</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">airUCI &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;/Users/tkuo/ntu_train/NTUTrainRL3/data/airUCI.csv&quot;</span>, <span class="dt">header =</span> <span class="ot">FALSE</span>, <span class="dt">col.names =</span> <span class="kw">c</span>(<span class="st">&quot;freq&quot;</span>, <span class="st">&quot;angle&quot;</span>, <span class="st">&quot;chLength&quot;</span>, <span class="st">&quot;velocity&quot;</span>, <span class="st">&quot;thickness&quot;</span>, <span class="st">&quot;dec&quot;</span>))</code></pre></div>
@@ -278,7 +290,7 @@ r_sq</code></pre></div>
 <ul>
 <li>同一個群集中的<strong>相似度</strong>要高</li>
 <li>不同群集之間的<strong>相似度</strong>要低</li>
-<li><p>所以我們先使用<strong>WSS / TSS</strong>來判別分群模型的表現</p></li>
+<li><p>我們先使用<strong>WSS / TSS</strong>來判別分群模型的表現</p></li>
 <li><p>組內距離平方和WSS(Within Cluster Sum of Squares)</p></li>
 </ul>
 <p><span class="math display">\[Min.\,WSS = \sum_{i=1}^{N_C}\sum_{x \in C_i}d(x,\,\bar{x}_{C_i})^2\]</span></p>
@@ -319,6 +331,7 @@ ratio</code></pre></div>
 <h1>WSS / TSS 比例 - Do It Yourself</h1>
 <ul>
 <li>來這裡下載資料集<a href="https://archive.ics.uci.edu/ml/datasets/seeds">seedsUCI</a></li>
+<li>使用常用函數了解資料框</li>
 <li>仿照前例, 計算WSS/TSS</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">seedsUCI &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;/Users/tkuo/ntu_train/NTUTrainRL3/data/seedsUCI.csv&quot;</span>, <span class="dt">header =</span> <span class="ot">FALSE</span>, <span class="dt">col.names =</span> <span class="kw">c</span>(<span class="st">&quot;area&quot;</span>, <span class="st">&quot;perimeter&quot;</span>, <span class="st">&quot;compactness&quot;</span>, <span class="st">&quot;length&quot;</span>, <span class="st">&quot;width&quot;</span>, <span class="st">&quot;asymmetry&quot;</span>, <span class="st">&quot;grooveLength&quot;</span>, <span class="st">&quot;type&quot;</span>))
@@ -488,18 +501,16 @@ n &lt;-<span class="st"> </span><span class="kw">nrow</span>(titanic)
 <span class="kw">set.seed</span>(<span class="dv">123</span>)
 shuffledTitanic &lt;-<span class="st"> </span>titanic[<span class="kw">sample</span>(n), ]
 
-<span class="co"># 設定亂數種子</span>
-<span class="kw">set.seed</span>(<span class="dv">123</span>)
-
 <span class="co"># accuracies向量</span>
-accuracies &lt;-<span class="st"> </span><span class="kw">c</span>()
+accuracies &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="ot">NA</span>, <span class="dt">times =</span> <span class="dv">4</span>)
 
 for (i in <span class="dv">1</span>:<span class="dv">4</span>) {
   <span class="co"># test的列數</span>
   indices &lt;-<span class="st"> </span>(((i<span class="dv">-1</span>) *<span class="st"> </span><span class="kw">round</span>((<span class="dv">1</span>/<span class="dv">4</span>)*<span class="kw">nrow</span>(shuffledTitanic))) +<span class="st"> </span><span class="dv">1</span>):((i*<span class="kw">round</span>((<span class="dv">1</span>/<span class="dv">4</span>) *<span class="st"> </span><span class="kw">nrow</span>(shuffledTitanic))))
   training &lt;-<span class="st"> </span>shuffledTitanic[-indices,]
   test &lt;-<span class="st"> </span>shuffledTitanic[indices,]
-  
+  <span class="co"># 設定亂數種子</span>
+  <span class="kw">set.seed</span>(<span class="dv">123</span>)
   <span class="co"># 建立決策樹模型</span>
   tree &lt;-<span class="st"> </span><span class="kw">rpart</span>(Survived ~<span class="st"> </span>., training, <span class="dt">method =</span> <span class="st">&quot;class&quot;</span>)
   
@@ -520,6 +531,7 @@ for (i in <span class="dv">1</span>:<span class="dv">4</span>) {
 <h1>更細膩精準地切分你的訓練與測試 - Do It Yourself</h1>
 <ul>
 <li>k-fold cross validation, k = 8</li>
+<li>將平均的 accuracies 印出</li>
 </ul>
 </div>
 <div id="underfitting-vs.overfitting" class="slide section level2">

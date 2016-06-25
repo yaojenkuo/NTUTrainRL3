@@ -117,7 +117,7 @@ summary(cars)
 * 購物籃推薦(Target)
 * 電影推薦(Netflix)
 * 無人車
-* 判別垃圾郵件
+* 判別垃圾郵件(Gmail: 主要/社交網路/促銷網路)
 * 在臉書照片上標註你自己與朋友
 * 預測2016年7月台幣兌日幣的匯率
 
@@ -145,6 +145,7 @@ summary(cars)
 ## 分類(決策樹範例)
 
 * 到[Kaggle](https://www.kaggle.com/c/titanic/data)將資料集 `train.csv` 下載到本機
+* 了解欄位意思
 * 對資料框使用函數暸解結構
 
 ```{r, results = 'hide', message = FALSE, warning= FALSE}
@@ -178,7 +179,7 @@ confusionMatrix <- table(x = test$Survived, y = prediction, dnn=c("Actual", "Pre
 confusionMatrix
 ```
 
-* 這裡的 train, test 跟 Kaggle 提供的很容易混淆, 一定要搞清楚
+* 這裡的 train, test 跟 Kaggle 提供的容易混淆, 一定要搞清楚
 
 ## 迴歸分析
 
@@ -222,7 +223,7 @@ abline(reg = lmIcedTea$coefficients, col = "red", lwd = 2)
 ```{r}
 # 建立一個分群模型
 irisCluster <- iris[-5]
-kmeansIris<-kmeans(irisCluster, centers = 3, nstart = 10)
+kmeansIris <- kmeans(irisCluster, centers = 3, nstart = 10)
 
 # 作圖
 plot(formula = Petal.Length ~ Petal.Width, data = irisCluster, col = kmeansIris$cluster, main = "將鳶尾花做分群", xlab = "花瓣寬度", ylab = "花瓣長度", family = "STHeiti")

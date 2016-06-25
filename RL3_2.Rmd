@@ -51,9 +51,9 @@ $$Accuracy = \frac{990 + 0}{990 + 10 + 0 + 0} = 0.99$$
 
 $$TPR = \frac{TP}{TP + FN}$$
 
-$$TNR = \frac{TN}{TN + FP}$$
+$$FPR = \frac{FP}{FP + TN}$$
 
-* 還有precision與recall...但我們先緩一緩吧...
+* 還有其他的...但我們先緩一緩吧...
 
 ## 混淆矩陣Confusion Matrix - Hands On
 
@@ -71,7 +71,7 @@ titanic$Survived <- factor(titanic$Survived, levels = c(1, 0))
 str(titanic)
 
 # 建立一個決策樹模型
-set.seed(1)
+set.seed(123)
 treeModel <- rpart(Survived ~ ., data = titanic, method = "class")
 titanicToBePredicted <- titanic[, -1]
 prediction <- predict(treeModel, newdata = titanicToBePredicted, type = "class")
@@ -101,6 +101,7 @@ FPR
 ## 混淆矩陣Confusion Matrix - Do It Yourself
 
 * 這次換你囉, 加入`Fare`, `Cabin`, 與`Embarked`這三個變數試試看!
+* 印出混淆矩陣
 * 計算 accuracy, TPR與FPR
 
 ## 均方根誤差RMSE
@@ -132,6 +133,7 @@ RMSE
 * 來這裡下載資料集[airUCI](https://archive.ics.uci.edu/ml/datasets/Airfoil+Self-Noise#)
 * 使用常用的函數暸解 `airUCI` 的結構
 * 只使用`freq`, `angle`, 以及`chLength`這三個變數來預測`dec`
+* 使用 `+` 在 `formula` 連接多個變數
 * 計算RMSE1
 
 ```{r}
@@ -179,7 +181,7 @@ summary(lmFit)$r.squared
 
 * 同一個群集中的**相似度**要高
 * 不同群集之間的**相似度**要低
-* 所以我們先使用**WSS / TSS**來判別分群模型的表現
+* 我們先使用**WSS / TSS**來判別分群模型的表現
 
 * 組內距離平方和WSS(Within Cluster Sum of Squares)
 
@@ -216,6 +218,7 @@ ratio
 ## WSS / TSS 比例 - Do It Yourself
 
 * 來這裡下載資料集[seedsUCI](https://archive.ics.uci.edu/ml/datasets/seeds)
+* 使用常用函數了解資料框
 * 仿照前例, 計算WSS/TSS
 
 ```{r}
@@ -303,18 +306,16 @@ n <- nrow(titanic)
 set.seed(123)
 shuffledTitanic <- titanic[sample(n), ]
 
-# 設定亂數種子
-set.seed(123)
-
 # accuracies向量
-accuracies <- c()
+accuracies <- rep(NA, times = 4)
 
 for (i in 1:4) {
   # test的列數
   indices <- (((i-1) * round((1/4)*nrow(shuffledTitanic))) + 1):((i*round((1/4) * nrow(shuffledTitanic))))
   training <- shuffledTitanic[-indices,]
   test <- shuffledTitanic[indices,]
-  
+  # 設定亂數種子
+  set.seed(123)
   # 建立決策樹模型
   tree <- rpart(Survived ~ ., training, method = "class")
   
@@ -334,6 +335,7 @@ mean(accuracies)
 ## 更細膩精準地切分你的訓練與測試 - Do It Yourself
 
 * k-fold cross validation, k = 8
+* 將平均的 accuracies 印出
 
 ## Underfitting vs. Overfitting?
 
