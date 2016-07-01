@@ -151,6 +151,10 @@ summary(cars)
 ```{r, results = 'hide', message = FALSE, warning= FALSE}
 # 載入需要使用的套件
 packages <- c("rpart", "rattle", "rpart.plot", "RColorBrewer", "magrittr")
+# 如果不想一一裝的話
+#for (i in packages){
+#  install.packages(i)
+#}
 sapply(packages, FUN = library, character.only = TRUE)
 ```
 

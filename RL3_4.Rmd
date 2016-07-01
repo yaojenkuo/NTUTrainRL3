@@ -12,7 +12,7 @@ output:
 
 * 單變數
 * 多變數
-* k-NN與GLM
+* GLM & GAM
 
 ## 從氣溫與冰紅茶銷量開始
 
@@ -108,7 +108,6 @@ summary(lmIcedTea)$r.squared
 * 除了氣溫會影響冰紅茶的銷售量, 你覺得還有其他因素會影響冰紅茶銷量
 * 像是奶茶的銷量, 當天鄰近友商是否有促銷活動...等
 * 加入更多變數可以提高模型預測的精準度
-
 * 最**fit**的面變為
 
 $$Y = \beta_o + \beta_1X_1 + \beta_2X_2 + \epsilon$$
@@ -165,7 +164,41 @@ qqnorm(chocoLm$residuals)
 * 實務上用這兩張圖形來檢驗, 左圖中的點要呈現隨機分佈, 右圖中的點要排在線上
 * 當然還有其他的進階檢驗方法
 
-## X與Y不是線性關係
+## GLM - 羅吉斯迴歸
+
+* 當目標變數 Y 介於 0 與 1 之間的時候使用, 例如預測機率
+* 也可用於二元分類器
+
+$$P(y = 1 \vert x_1,...,x_m) = \frac{1}{1+ e ^ {-(\beta_0 + \beta_1x_1 + ... + \beta_mx_m)}}$$
+
+* 使用 `glm()` 函數，指定 `family = "binomial"`
+
+```{r}
+library(magrittr)
+titanic <- read.csv("/Users/tkuo/ntu_train/NTUTrainRL3/data/train.csv", header = TRUE)
+titanic <- titanic[, c(2, 3, 5, 6)] %>% na.omit
+titanic$Survived <- factor(titanic$Survived, levels = c("1", "0"))
+titanic$Pclass <- factor(titanic$Pclass)
+
+# 建立訓練與測試樣本
+n <- nrow(titanic)
+set.seed(123)
+shuffledTitanic <- titanic[sample(n), ]
+trainIndices <- 1:round(0.7 * n)
+train <- shuffledTitanic[trainIndices, ]
+testIndices <- (round(0.7 * n) + 1):n
+test <- shuffledTitanic[testIndices, ]
+
+# 建立羅吉斯迴歸模型
+titanic_logistic <- glm(formula = Survived ~ ., family = "binomial", data = train)
+prediction <- predict(titanic_logistic, newdata = test, type = "response")
+prediction_cutoff_50 <- ifelse(prediction > 0.5, 1, 0)
+confusionMatrix <- table(test$Survived, prediction_cutoff_50, dnn = c("actural", "predict"))
+accuracy <- sum(diag(confusionMatrix))/sum(confusionMatrix)
+accuracy
+```
+
+## X與Y不是單調的關係
 
 * 使用資料集 `urbanPopGdp.csv`
 * 使用 `str()` 函數看看這個資料集
@@ -193,6 +226,7 @@ summary(lmLogTransformed)$r.squared
 
 * 我怎麼知道什麼時候要用對數轉換? 什麼時候要用倒數?
 * 讓GAM(Generalized Additive Model)來做這件事
+* `gam()` 函數在 `mgcv` 這個套件中
 
 ```{r}
 library(mgcv)

@@ -38,12 +38,12 @@ $$Accuracy = \frac{TP + TN}{TP + FP + FN + TN}$$
 
 * 光使用 Accuracy 來判定會有什麼問題? 
 * 假設有一個預測罕見疾病的分類器, 這個罕見疾病的比例大約是1%
-* 我們的分類器很粗糙, 它一律猜測所有觀測值都沒有病:
+* 我們的分類器很粗糙, 它一律猜測所有觀測值(病人)都正常:
 
 |     |TRUE|FALSE|
 |-----|----|-----|
-|TRUE |990 |10   |
-|FALSE|0   |0    |
+|TRUE |990 |0    |
+|FALSE|10  |0    |
 
 $$Accuracy = \frac{990 + 0}{990 + 10 + 0 + 0} = 0.99$$
 
@@ -89,7 +89,7 @@ FN <- confusionMatrix[1, 2]
 # 計算accuracy, TPR, FPR
 accuracy <- (TP + TN)/(TP + TN + FP + FN)
 accuracy <- sum(diag(confusionMatrix))/sum(confusionMatrix)# 試試這樣算
-TPR <- TP/(TP + FP)
+TPR <- TP/(TP + FN)
 FPR <- FP/(FP + TN)
 
 # accuracy, TPR, FPR
@@ -137,12 +137,22 @@ RMSE
 * 計算RMSE1
 
 ```{r}
-airUCI <- read.csv("/Users/tkuo/ntu_train/NTUTrainRL3/data/airUCI.csv", header = FALSE, col.names = c("freq", "angle", "chLength", "velocity", "thickness", "dec"))
+# 直接從UCI讀入資料集
+airUCI <- read.table("https://archive.ics.uci.edu/ml/machine-learning-databases/00291/airfoil_self_noise.dat", header = FALSE, col.names = c("freq", "angle", "chLength", "velocity", "thickness", "dec"))
+# 建立一個線性模型lmFit_1, 用練習題規定的三個變數預測dec
+lmFit_1 <- lm(formula = dec ~ freq + angle + chLength, data = airUCI)
+# 將原始資料的三個變數篩選出
+airUCIToBePredicted <- data.frame(airUCI[, c(1:3)])
+# 用建好的模型預測dec
+prediction <- predict(lmFit_1, newdata = airUCIToBePredicted)
+# 再利用公式計算預測趨勢線與實際值的的RMSE
+RMSE1 <- sqrt(sum( (airUCI$dec - prediction) ^ 2) / nrow(airUCI))
+RMSE1
 ```
 
 ## 均方根誤差RMSE - Do It Yourself(2)
 
-* 再加入`velocity`以及`chLength`這兩個變數, 共5個變數來預測`dec`
+* 再加入`velocity`以及`thickness`這兩個變數, 共5個變數來預測`dec`
 * 計算RMSE2
 * 比較RMSE1與RMSE2
 

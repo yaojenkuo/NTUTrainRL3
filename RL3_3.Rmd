@@ -120,7 +120,7 @@ accuracy
 
 ```{r}
 # 建立一個Overfitting的決策樹模型(cp = 0.00001)
-set.seed(1)
+set.seed(123)
 treeComplex <- rpart(Survived ~ ., train, method = "class", control = rpart.control(cp = 0.00001))
 
 # 作圖
@@ -145,7 +145,7 @@ fancyRpartPlot(treePruned)
 
 ```{r}
 # 建立
-set.seed(1)
+set.seed(123)
 treeIG <- rpart(Survived ~ ., train, method = "class", parms = list(split = "information"))
 predictionIG <- predict(treeIG, test, type = "class")
 confusionMatIG <- table(test$Survived, predictionIG)
@@ -181,14 +181,12 @@ $$d_M(a, b) = \sum_{i = 1} ^ D \vert{a_i - b_i}\vert$$
 |1.92     |92        |
 |1.92     |91        |
 |2.03     |92        |
-----------------------
 
 |height(cm)|weight(kg)|
 |----------|----------|
 |192       |92        |
 |192       |91        |
 |203       |92        |
------------------------
 
 * 標準化公式
 
@@ -227,7 +225,7 @@ titanic$Pclass <- (titanic$Pclass - minPclass) / (maxPclass - minPclass)
 
 ```{r}
 # 切分訓練測試樣本
-set.seed(1)
+set.seed(123)
 n <- nrow(titanic)
 shuffledTitanic <- titanic[sample(n), ]
 trainIndices <- 1:round(0.7 * n)
@@ -245,7 +243,7 @@ knnTest <- test[, -c(1)]
 
 # 建立模型
 library(class)
-set.seed(1)
+set.seed(123)
 pred <- knn(train=knnTrain, test=knnTest, cl=trainLabels, k=5)
 ```
 
@@ -258,9 +256,9 @@ pred <- knn(train=knnTrain, test=knnTest, cl=trainLabels, k=5)
 * 我們無法用直覺來選擇 k = ?, 不如就用程式幫我們決定吧!
 
 ```{r}
-range <- seq(from = 1, to = 300, by = 2)
+range <- 1:round(0.2 * nrow(knnTrain))
 accuracies <- rep(NA, length(range))
-set.seed(1)
+set.seed(123)
 
 for (i in range) {
   prediction <- knn(train = knnTrain, test = knnTest, cl = trainLabels, k = i)
@@ -269,7 +267,7 @@ for (i in range) {
 }
 
 plot(range, accuracies, xlab="k")
-which.max(accs)
+which.max(accuracies)
 ```
 
 ## 在k最近鄰分類法中納入類別型變數
@@ -339,7 +337,8 @@ probabilities <- predict(tree, test, type = "prob")[,1]
 library(ROCR)
 pred <- prediction(probabilities, labels = test$Survived)
 perf <- performance(pred, "tpr", "fpr")
-plot(perf)
+# 執行正常但是不能knit
+# plot(perf)
 
 # AUC
 perf <- performance(pred, "auc")
@@ -370,6 +369,7 @@ treeComp <- rpart(Survived ~ ., trainComp, method = "class")
 probabilitiesComp <- predict(treeComp, testComp, type = "prob")[,1]
 predComp <- prediction(probabilitiesComp, labels = testComp$Survived)
 perfComp <- performance(predComp, "tpr", "fpr")
-plot(perf, main = "ROC Curves", col = "blue", lwd = 2)
-plot(perfComp, add = TRUE, col = "green", lwd = 2)
+# 執行正常但是不能knit
+# plot(perf, main = "ROC Curves", col = "blue", lwd = 2)
+# plot(perfComp, add = TRUE, col = "green", lwd = 2)
 ```
