@@ -107,6 +107,37 @@ accuracy
 
 * 加入`SibSp`, `Fare`, `Cabin`與`Embarked`再玩一次!
 
+```{r}
+# 載入titanic資料集
+titanic <- read.csv("/Users/tkuo/ntu_train/NTUTrainRL3/data/train.csv", header = TRUE)
+titanic <- titanic[, c(2, 3, 5, 6, 7, 10:12)] %>% na.omit
+titanic$Survived <- factor(titanic$Survived, levels = c("1", "0"))
+titanic$Pclass <- factor(titanic$Pclass)
+
+# 建立訓練與測試樣本
+n <- nrow(titanic)
+set.seed(123)
+shuffledTitanic <- titanic[sample(n), ]
+trainIndices <- 1:round(0.7 * n)
+train <- shuffledTitanic[trainIndices, ]
+testIndices <- (round(0.7 * n) + 1):n
+test <- shuffledTitanic[testIndices, ]
+
+# 建立決策樹模型
+tree <- rpart(Survived ~ ., data = train, method = "class")
+
+# 畫決策樹
+fancyRpartPlot(tree)
+
+# 預測測試樣本
+prediction <- predict(tree, test, type = "class")
+
+# 計算accuracy
+confusionMatrix <- table(test$Survived, prediction)
+accuracy <- sum(diag(confusionMatrix)) / sum(confusionMatrix)
+accuracy
+```
+
 ## 修剪(pruning)是什麼?
 
 * 你還記得我們上一個章節教的Overfitting嗎?
@@ -136,6 +167,27 @@ fancyRpartPlot(treePruned)
 ## 修剪(pruning)是什麼? - Do It Yourself
 
 * 把前一個加入加入`SibSp`, `Fare`, `Cabin`與`Embarked`的決策樹模型 `cp` 指定為 0.00001, 並使用`prune()`函數進行修剪為預設的cp = 0.01
+
+```{r}
+titanic <- read.csv("/Users/tkuo/ntu_train/NTUTrainRL3/data/train.csv", header = TRUE)
+titanic <- titanic[, c(2, 3, 5, 6, 7, 10:12)] %>% na.omit
+titanic$Survived <- factor(titanic$Survived, levels = c("1", "0"))
+titanic$Pclass <- factor(titanic$Pclass)
+
+# 建立訓練與測試樣本
+n <- nrow(titanic)
+set.seed(123)
+shuffledTitanic <- titanic[sample(n), ]
+trainIndices <- 1:round(0.7 * n)
+train <- shuffledTitanic[trainIndices, ]
+testIndices <- (round(0.7 * n) + 1):n
+test <- shuffledTitanic[testIndices, ]
+
+# 建立決策樹模型
+tree <- rpart(Survived ~ ., data = train, method = "class", control = rpart.control(cp = 0.00001))
+# 修剪
+treePruned <- prune(tree, cp=0.01)
+```
 
 ## 改用資訊獲利(Information Gain)試試看 - Hands on
 
@@ -213,6 +265,13 @@ titanic$Pclass <- (titanic$Pclass - minPclass) / (maxPclass - minPclass)
 
 * 將`titanic` 資料集的 Age 也進行標準化
 
+```{r}
+# 標準化Age
+minAge <- min(titanic$Age)
+maxAge <- max(titanic$Age)
+titanic$Age <- (titanic$Age - minAge) / (maxAge - minAge)
+```
+
 ## k最近鄰分類法(k-Nearest Neighbors) - Hands on
 
 * `knn()` 函數在 `class` 套件中, 使用前要安裝與載入
@@ -249,7 +308,13 @@ pred <- knn(train=knnTrain, test=knnTest, cl=trainLabels, k=5)
 
 ## k最近鄰分類法(k-Nearest Neighbors) - Do It Yourself
 
-* 建立混淆矩陣並將accuracy計算印出。
+* 建立混淆矩陣並將accuracy計算印出
+
+```{r}
+confusionMatrix <- table(testLabels, pred)
+accuracy <- sum(diag(confusionMatrix)) / sum(confusionMatrix)
+accuracy
+```
 
 ## 如何選擇 k 值? - Hands on
 
@@ -306,6 +371,21 @@ $$FPR = \frac{FP}{FP + TN}$$
 $$TPR = \frac{TP}{TP + FN}$$
 
 ![Source: Google Search](images/rocc.png)
+
+* 每一個點都代表一個 `decision function` 下所對應的(FPR, TPR)
+* (100, 100)代表的是一個全部都歸類為Positive的 `decision function`
+
+|        |Positive|Negative|
+|--------|--------|--------|
+|Positive|10      |0       |
+|Negative|90      |0       |
+
+* (0, 0)代表的是一個全部都歸類為Negative的 `decision function`
+
+|        |Positive|Negative|
+|--------|--------|--------|
+|Positive|0       |10      |
+|Negative|0       |90      |
 
 * `AUC` 就是計算 ROC 曲線底下的面積, 這個數字愈接近1, 就表示分類分得愈好; 愈接近0.5就表示分類分得不好
 
