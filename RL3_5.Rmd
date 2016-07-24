@@ -70,6 +70,10 @@ plot(iris_km$Petal.Width, iris_km$Petal.Length, col=fit_km$cluster)
 
 ```{r}
 seedsUCI <- read.csv("/Users/tkuo/ntu_train/NTUTrainRL3/data/seedsUCI.csv", header = FALSE, col.names = c("area", "perimeter", "compactness", "length", "width", "asymmetry", "grooveLength", "type"))
+seeds_km <- seedsUCI[, -8]
+fit_km <- kmeans(seeds_km, nstart=20, centers=3)
+table(fit_km$cluster, seedsUCI[, 8])
+plot(seeds_km$area, seeds_km$compactness, col=fit_km$cluster)
 ```
 
 ## k 要怎麼選擇
@@ -102,6 +106,15 @@ plot(ratio_ss, type="b", xlab="k", main = "screeplot") # "b" as in both
 * 繼續使用 `seesUCI` 資料集練習
 * 從 1 群測到 7 群
 * 畫陡坡圖
+
+```{r}
+ratio_ss <- rep(NA, times = 11)
+for (k in 1:length(ratio_ss)) {
+  fit_km <- kmeans(seeds_km, centers=k, nstart=20)
+  ratio_ss[k] <- fit_km$tot.withinss/fit_km$totss
+}
+plot(ratio_ss, type="b", xlab="k", main = "screeplot") # "b" as in both
+```
 
 ## 唐恩指數Dunn's Index
 
@@ -139,6 +152,12 @@ dunn(clusters = fit_km$cluster, Data = iris_km)
 * 來這裡下載資料集[seedsUCI](https://archive.ics.uci.edu/ml/datasets/seeds)
 * 用 `seedsUCI` 練習算出唐恩指數(`nstart` = 20, `centers` = 3)
 
+```{r}
+set.seed(123)
+fit_km <- kmeans(seeds_km, nstart=20, centers=3)
+dunn(clusters = fit_km$cluster, Data = seeds_km)
+```
+
 ## 正規化 - Hands on
 
 * 還記得你在 k-NN 分類時碰到過的單位問題嗎?
@@ -157,8 +176,6 @@ dunn(clusters = fit_km$cluster, Data = mtcars_km)
 dunn(clusters = fit_km_norm$cluster, Data = mtcars_km_norm)
 ```
 
-## 正規化 - Do It Yourself
-
 ## 階層式分群
 
 * k-means分群一定要指定參數 `k` , 意即你必須一開始心中對於群數就要有主見
@@ -167,7 +184,7 @@ dunn(clusters = fit_km_norm$cluster, Data = mtcars_km_norm)
 ![Source: Johns Hopkins University](images/hclust.png)
 
 * 衡量群集之間的距離時有**3**種計算方式
-    * 簡單連結: 僅衡量群集間的最短距離
+    * 單一連結: 僅衡量群集間的最短距離
     * 完整連結: 僅衡量群集間的最大距離
     * 平均連結: 衡量群集間的平均距離
 
@@ -192,6 +209,15 @@ dunn(clusters = crime_single_hclust, Data = crime_data_num)
 
 ## 階層式分群 - Do It Yourself
 
-* 把 `simple-linkage` 的方法改為 `complete-linkage`
+* 把 `single-linkage` 的方法改為 `complete-linkage`
 * 另外用 k-means 分為四群
 * 比較兩種分群的唐恩指數
+
+```{r}
+crime_complete <- hclust(dist_matrix, method = "complete")
+crime_complete_hclust <- cutree(crime_complete, k = 4)
+crime_km_norm <- data.frame(scale(crime_data_num))
+fit_km_norm <- kmeans(crime_km_norm, centers = 4, nstart = 10)
+dunn(clusters = crime_single_hclust, Data = crime_data_num)
+dunn(clusters = fit_km_norm$cluster, Data = crime_km_norm)
+```
