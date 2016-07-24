@@ -64,6 +64,14 @@ predicted
 * 畫出散佈圖, X軸為速度, Y軸為煞車距離
 * 預測速度26, 煞車距離為何
 
+```{r}
+plot(x = cars$speed, y = cars$dist)
+lmCars <- lm(formula = dist ~ speed, data = cars)
+toBePredicted <- data.frame(speed = 26)
+predicted <- predict(lmCars, newdata = toBePredicted)
+predicted
+```
+
 ## 如何判斷迴歸模型的表現?
 
 * RMSE(愈低愈好)
@@ -102,6 +110,26 @@ summary(lmIcedTea)$r.squared
 * 計算rmse
 * 計算R-squared
 * 跟 `summary()` 的結果比較
+
+```{r}
+carsSpeed <- data.frame(cars$speed)
+names(carsSpeed) <- "speed"
+carsEst <- predict(lmCars, newdata = carsSpeed)
+
+# 計算RMSE
+res <- cars$dist - carsEst
+rmse <- sqrt( sum(res^2) /nrow(cars) )
+rmse
+
+# 計算R-squared
+ss_res <- sum (res ^ 2)
+ss_tot <- sum( (cars$dist - mean(cars$dist))^2 )
+r_sq <- 1 - ss_res / ss_tot
+r_sq
+
+# 跟 summary() 的結果比較
+summary(lmCars)$r.squared
+```
 
 ## 加入更多的變數
 
@@ -146,6 +174,12 @@ summary(chocoTwoVars)$adj.r.squared
 
 * 將熱量對大小 `size` 作圖
 * 將 `size` 也納入
+
+```{r}
+plot(calories ~ size, chocolate)
+chocoThreeVars <- lm(formula = calories ~ protein + fat + size, data = chocolate)
+summary(chocoThreeVars)$adj.r.squared
+```
 
 ## 單變數/多變數線性模型需要符合的假設
 
